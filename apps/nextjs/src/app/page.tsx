@@ -1,39 +1,29 @@
-import { Suspense } from "react";
+import { Button } from "@acme/ui/button";
+import { Form } from "@acme/ui/form";
+import { Icons } from "@acme/ui/icons";
+import { Input } from "@acme/ui/input";
+import { H1 } from "@acme/ui/typography";
 
-import { api } from "~/trpc/server";
-import {
-  CreatePostForm,
-  PostCardSkeleton,
-  PostList,
-} from "./_components/posts";
+import { JoinReading } from "../components/join-reading";
+import { NewScript } from "../components/new-script";
+import { ScriptSearch } from "../components/script-search";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 export default function HomePage() {
   // You can await this here if you don't want to show Suspense fallback below
-  const posts = api.post.all();
+  // const posts = api.post.all();
 
   return (
     <main className="container h-screen py-16">
       <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-          Create <span className="text-primary">T3</span> Turbo
-        </h1>
-
-        <CreatePostForm />
-        <div className="w-full max-w-2xl overflow-y-scroll">
-          <Suspense
-            fallback={
-              <div className="flex w-full flex-col gap-4">
-                <PostCardSkeleton />
-                <PostCardSkeleton />
-                <PostCardSkeleton />
-              </div>
-            }
-          >
-            <PostList posts={posts} />
-          </Suspense>
-        </div>
+        <H1>
+          <span className="text-primary">On</span>Script
+          {/* <span className="text-primary">On</span>Script<span className="text-primary">AI</span> */}
+        </H1>
+        <ScriptSearch />
+        <JoinReading />
+        <NewScript />
       </div>
     </main>
   );

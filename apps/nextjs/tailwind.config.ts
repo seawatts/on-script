@@ -12,6 +12,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["var(--font-geist-sans)", ...fontFamily.sans],
+        script: ["var(--font-courier-prime)", ...fontFamily.mono],
         mono: ["var(--font-geist-mono)", ...fontFamily.mono],
       },
     },

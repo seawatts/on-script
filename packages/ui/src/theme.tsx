@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { ThemeProvider, useTheme } from "next-themes";
+import { useTheme } from "next-themes";
 
 import { Button } from "./button";
 import {
@@ -39,4 +39,6 @@ function ThemeToggle() {
   );
 }
 
-export { ThemeProvider, ThemeToggle };
+export { ThemeToggle };
+
+export { ThemeProvider } from "next-themes";

@@ -10,7 +10,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-import { db } from "@acme/db/client";
+// import { db } from "@acme/db/client";
 
 /**
  * 1. CONTEXT
@@ -24,14 +24,14 @@ import { db } from "@acme/db/client";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const authToken = opts.headers.get("Authorization") ?? null;
+export const createTRPCContext = async (options: { headers: Headers }) => {
+  const authToken = options.headers.get("Authorization") ?? null;
 
-  const source = opts.headers.get("x-trpc-source") ?? "unknown";
+  const source = options.headers.get("x-trpc-source") ?? "unknown";
   console.log(">>> tRPC Request from", source, "by");
 
   return {
-    db,
+    // db,
     token: authToken,
   };
 };
@@ -43,7 +43,6 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  * transformer
  */
 const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
   errorFormatter: ({ shape, error }) => ({
     ...shape,
     data: {
@@ -51,6 +50,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
     },
   }),
+  transformer: superjson,
 });
 
 /**

@@ -21,34 +21,34 @@ import { api } from "~/trpc/react";
 
 export function CreatePostForm() {
   const form = useForm({
-    schema: CreatePostSchema,
     defaultValues: {
       content: "",
       title: "",
     },
+    schema: CreatePostSchema,
   });
 
   const utils = api.useUtils();
-  const createPost = api.post.create.useMutation({
-    onSuccess: async () => {
-      form.reset();
-      await utils.post.invalidate();
-    },
-    onError: (err) => {
-      toast.error(
-        err.data?.code === "UNAUTHORIZED"
-          ? "You must be logged in to post"
-          : "Failed to create post",
-      );
-    },
-  });
+  // const createPost = api.post.create.useMutation({
+  //   onSuccess: async () => {
+  //     form.reset();
+  //     await utils.post.invalidate();
+  //   },
+  //   onError: (err) => {
+  //     toast.error(
+  //       err.data?.code === "UNAUTHORIZED"
+  //         ? "You must be logged in to post"
+  //         : "Failed to create post",
+  //     );
+  //   },
+  // });
 
   return (
     <Form {...form}>
       <form
         className="flex w-full max-w-2xl flex-col gap-4"
         onSubmit={form.handleSubmit((data) => {
-          createPost.mutate(data);
+          // createPost.mutate(data);
         })}
       >
         <FormField
@@ -118,15 +118,15 @@ export function PostCard(props: {
 }) {
   const utils = api.useUtils();
   const deletePost = api.post.delete.useMutation({
-    onSuccess: async () => {
-      await utils.post.invalidate();
-    },
-    onError: (err) => {
+    onError: (error) => {
       toast.error(
-        err.data?.code === "UNAUTHORIZED"
+        error.data?.code === "UNAUTHORIZED"
           ? "You must be logged in to delete a post"
           : "Failed to delete post",
       );
+    },
+    onSuccess: async () => {
+      await utils.post.invalidate();
     },
   });
 

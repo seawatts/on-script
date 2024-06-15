@@ -2,7 +2,10 @@
 
 import eslint from "@eslint/js";
 import importPlugin from "eslint-plugin-import";
+import sortKeysFixPlugin from "eslint-plugin-sort-keys-fix";
 import turboPlugin from "eslint-plugin-turbo";
+import unicornPlugin from "eslint-plugin-unicorn";
+import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import tseslint from "typescript-eslint";
 
 /**
@@ -42,6 +45,9 @@ export default tseslint.config(
     plugins: {
       import: importPlugin,
       turbo: turboPlugin,
+      unicorn: unicornPlugin,
+      "unused-imports": unusedImportsPlugin,
+      "sort-keys-fix": sortKeysFixPlugin,
     },
     extends: [
       eslint.configs.recommended,
@@ -50,7 +56,51 @@ export default tseslint.config(
       ...tseslint.configs.stylisticTypeChecked,
     ],
     rules: {
-      ...turboPlugin.configs.recommended.rules,
+      ...unicornPlugin.configs["flat/recommended"].rules,
+      "unicorn/no-null": "off",
+      "unicorn/no-useless-undefined": "off",
+      "unicorn/prevent-abbreviations": [
+        "error",
+        {
+          allowList: {
+            Args: true,
+            E2E: true,
+            ENV: true,
+            Env: true,
+            Fn: true,
+            PROD: true,
+            Param: true,
+            Params: true,
+            Prod: true,
+            Props: true,
+            Ref: true,
+            args: true,
+            e2e: true,
+            env: true,
+            fn: true,
+            getInitialProps: true,
+            param: true,
+            params: true,
+            prod: true,
+            props: true,
+            ref: true,
+            str: true,
+          },
+        },
+      ],
+      // "no-unused-vars": "off", // or "@typescript-eslint/no-unused-vars": "off",
+      // "unused-imports/no-unused-imports": "error",
+      // "unused-imports/no-unused-vars": [
+      //   "warn",
+      //   {
+      //     vars: "all",
+      //     varsIgnorePattern: "^_",
+      //     args: "after-used",
+      //     argsIgnorePattern: "^_",
+      //   },
+      // ],
+      "sort-keys-fix/sort-keys-fix": "warn",
+      // "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },

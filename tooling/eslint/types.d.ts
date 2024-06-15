@@ -65,3 +65,33 @@ declare module "eslint-plugin-turbo" {
   };
   export const rules: Record<string, Rule.RuleModule>;
 }
+
+declare module "eslint-plugin-sort-keys-fix" {
+  import type { Linter, Rule } from "eslint";
+
+  export const configs: {
+    recommended: { rules: Linter.RulesRecord };
+  };
+  export const rules: Record<string, Rule.RuleModule>;
+}
+
+declare module "eslint-plugin-unused-imports" {
+  import type { Linter, Rule } from "eslint";
+
+  export const configs: {
+    recommended: { rules: Linter.RulesRecord };
+  };
+  export const rules: Record<string, Rule.RuleModule>;
+}
+
+declare module "eslint-plugin-unicorn" {
+  import type { TSESLint } from "@typescript-eslint/utils";
+  import type { ConfigWithExtends } from "typescript-eslint";
+
+  type Configs = "recommended" | "all" | "flat/recommended" | "flat/all";
+  interface PluginUnicorn extends TSESLint.FlatConfig.Plugin {
+    configs: Record<Configs, ConfigWithExtends>;
+  }
+
+  export = plugin as PluginUnicorn;
+}
