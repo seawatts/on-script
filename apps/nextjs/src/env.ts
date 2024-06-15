@@ -18,6 +18,9 @@ export const env = createEnv({
   // experimental__runtimeEnv: {
   // NODE_ENV: process.env.NODE_ENV,
 
+  // OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  // POSTGRES_URL: process.env.POSTGRES_URL,
+  // NODE_ENV: process.env.NODE_ENV,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   // },
 
@@ -25,8 +28,8 @@ export const env = createEnv({
 
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-    POSTGRES_URL: process.env.POSTGRES_URL,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "test",
+    POSTGRES_URL: process.env.POSTGRES_URL ?? "test",
   },
 
   /**
