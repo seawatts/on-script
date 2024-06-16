@@ -1,6 +1,7 @@
 "use client";
 
 import type { TextTypographyProps } from "@acme/ui/typography";
+import { OmniBar } from "@acme/ui/omni-bar";
 import { Separator } from "@acme/ui/separator";
 import { Text } from "@acme/ui/typography";
 
@@ -103,7 +104,7 @@ export default function ScriptIdPage() {
       <Header />
       <main className="container h-screen max-w-2xl py-16">
         <ScriptProvider>
-          <div className="flex flex-col items-center justify-center gap-24">
+          <div className="relative flex flex-col items-center justify-center gap-24">
             {/* <div className="sticky top-0 z-30 flex h-14 w-full items-center justify-center border-b bg-background text-center underline"> */}
             <Text className="underline">Oppenheimer</Text>
             {/* </div> */}
@@ -141,6 +142,7 @@ export default function ScriptIdPage() {
               </div>
             ))}
           </div>
+          <OmniBar />
         </ScriptProvider>
       </main>
     </div>

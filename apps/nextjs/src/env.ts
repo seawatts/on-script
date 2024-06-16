@@ -15,22 +15,19 @@ export const env = createEnv({
   /**
    * Destructure all variables from `process.env` to make sure they aren't tree-shaken away.
    */
-  // experimental__runtimeEnv: {
-  // NODE_ENV: process.env.NODE_ENV,
-
-  // OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-  // POSTGRES_URL: process.env.POSTGRES_URL,
-  // NODE_ENV: process.env.NODE_ENV,
-  // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
-  // },
+  experimental__runtimeEnv: {
+    NODE_ENV: process.env.NODE_ENV,
+    // OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "test",
+    // POSTGRES_URL: process.env.POSTGRES_URL ?? "test",
+  },
 
   extends: [vercel()],
 
-  runtimeEnv: {
-    NODE_ENV: process.env.NODE_ENV,
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "test",
-    POSTGRES_URL: process.env.POSTGRES_URL ?? "test",
-  },
+  // runtimeEnv: {
+  //   NODE_ENV: process.env.NODE_ENV,
+  //   OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "test",
+  //   POSTGRES_URL: process.env.POSTGRES_URL ?? "test",
+  // },
 
   /**
    * Specify your server-side environment variables schema here.
