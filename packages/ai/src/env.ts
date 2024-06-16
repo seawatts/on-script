@@ -8,7 +8,7 @@ export const env = createEnv({
   emptyStringAsUndefined: true,
   runtimeEnv: process.env,
   server: {
-    OPENAI_API_KEY: z.string(),
+    OPENAI_API_KEY: z.string().optional(),
   },
   shared: {
     NODE_ENV: z

@@ -38,7 +38,7 @@ export function useHideOnScroll(props: {
   }, []);
 
   useEffect(() => {
-    const scrollUpHeight = props.scrollUpHeight ?? 100;
+    const scrollUpHeight = props.scrollUpHeight ?? 0;
 
     if (scrollDelta.y > props.scrollHeight) {
       if (scrollDelta.y > scrollDelta.lastY) {

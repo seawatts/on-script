@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { cn } from "@acme/ui";
 import { Button } from "@acme/ui/button";
+import { useHideOnScroll } from "@acme/ui/hooks/use-hide-on-scroll";
 import { Icons } from "@acme/ui/icons";
 import { Sheet, SheetContent, SheetTrigger } from "@acme/ui/sheet";
-
-import { useHideOnScroll } from "~/hooks/use-hide-on-scroll";
 
 export function Header() {
   const { hidden } = useHideOnScroll({

@@ -4,9 +4,10 @@ import type { JsonSchema7Type } from "zod-to-json-schema";
 import OpenAI, { toFile } from "openai";
 import zodToJsonSchema from "zod-to-json-schema";
 
-import { env } from "./env";
+// import { env } from "./env";
 
-const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+// const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+const openai = new OpenAI({ apiKey: "123" });
 
 const formatInstructionsComplex = (
   schema: JsonSchema7Type,

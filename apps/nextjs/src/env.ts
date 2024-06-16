@@ -27,7 +27,7 @@ export const env = createEnv({
    * This way you can ensure the app isn't built with invalid env vars.
    */
   server: {
-    OPENAI_API_KEY: z.string(),
+    OPENAI_API_KEY: z.string().optional(),
     POSTGRES_URL: z.string().url().optional(),
   },
 

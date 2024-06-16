@@ -1,7 +1,7 @@
 "use client";
 
 import type { TextTypographyProps } from "@acme/ui/typography";
-import { OmniBar } from "@acme/ui/omni-bar";
+import { OmniBar } from "@acme/ui/omni-bar/index";
 import { Separator } from "@acme/ui/separator";
 import { Text } from "@acme/ui/typography";
 

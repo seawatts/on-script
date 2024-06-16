@@ -21,8 +21,11 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   ChevronUp,
   Circle,
+  CircleDot,
   CirclePlus,
   CircleStop,
   Command,
@@ -91,6 +94,7 @@ export const iconVariants = cva("shrink-0", {
       xl: "size-7",
       xs: "size-3",
     },
+
     variant: {
       destructive: "text-destructive",
       loading: "text-muted",
@@ -174,7 +178,18 @@ export const Icons = {
   ChevronUp: twx(ChevronUp).transientProps(["size", "variant"])<IconProps>(
     ({ size, variant }) => iconVariants({ size, variant }),
   ),
+  ChevronsLeft: twx(ChevronsLeft).transientProps([
+    "size",
+    "variant",
+  ])<IconProps>(({ size, variant }) => iconVariants({ size, variant })),
+  ChevronsRight: twx(ChevronsRight).transientProps([
+    "size",
+    "variant",
+  ])<IconProps>(({ size, variant }) => iconVariants({ size, variant })),
   Circle: twx(Circle).transientProps(["size", "variant"])<IconProps>(
+    ({ size, variant }) => iconVariants({ size, variant }),
+  ),
+  CircleDot: twx(CircleDot).transientProps(["size", "variant"])<IconProps>(
     ({ size, variant }) => iconVariants({ size, variant }),
   ),
   CirclePlus: twx(CirclePlus).transientProps(["size", "variant"])<IconProps>(
