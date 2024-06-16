@@ -8,7 +8,7 @@ import { Button } from "./button";
 
 export function OmniBar() {
   return (
-    <div className="fixed bottom-4 flex max-w-max items-center justify-between rounded-full bg-secondary p-2">
+    <div className="flex max-w-max items-center justify-between rounded-full bg-secondary p-2">
       <div className="flex space-x-2 border-r border-zinc-600 pr-1">
         <Button
           className="rounded-full text-zinc-100 hover:bg-gray-600 hover:text-zinc-100"
