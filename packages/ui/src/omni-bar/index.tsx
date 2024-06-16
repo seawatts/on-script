@@ -17,7 +17,7 @@ export function OmniBar() {
         "fixed flex max-w-max transform items-center justify-between rounded-full bg-secondary p-2 transition-all",
         {
           "bottom-0 translate-y-full": hidden,
-          "bottom-4": !hidden,
+          "bottom-2 sm:bottom-4": !hidden,
         },
       )}
     >

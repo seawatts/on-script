@@ -101,7 +101,7 @@ export default function ScriptIdPage() {
   return (
     <div className="flex min-h-screen flex-col sm:gap-4 sm:py-4">
       {/* <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14"> */}
-      <Header />
+      {/* <Header /> */}
       <main className="container mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center">
         <ScriptProvider>
           <div className="relative flex flex-col items-center justify-center gap-24">
