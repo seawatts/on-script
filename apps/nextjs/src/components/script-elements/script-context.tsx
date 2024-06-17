@@ -29,7 +29,7 @@ export interface ScriptProviderProps {
 function ScriptProvider(props: PropsWithChildren<ScriptProviderProps>) {
   const [settings, setSettings] = useState<ScriptSettings>(
     props.settings ?? {
-      theme: Theme.PLAYFUL,
+      theme: Theme.SCRIPT,
       typography: {
         size: "script",
         spacing: "script",

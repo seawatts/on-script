@@ -99,7 +99,7 @@ export default function ScriptIdPage() {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col sm:gap-4 sm:py-4">
+    <div className="flex min-h-screen flex-col py-4 sm:gap-4">
       {/* <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14"> */}
       {/* <Header /> */}
       <main className="container mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center">
