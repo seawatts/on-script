@@ -18,6 +18,7 @@ export enum DialogDirection {
 export interface BaseElement {
   type: ElementType;
   text: string;
+  index: number;
 }
 
 export interface ActionElement extends BaseElement {

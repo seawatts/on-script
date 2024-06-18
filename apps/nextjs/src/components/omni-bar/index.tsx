@@ -1,11 +1,14 @@
-import { cn } from "..";
-import { Button } from "../button";
-import { useHideOnScroll } from "../hooks/use-hide-on-scroll";
-import { Icons } from "../icons";
+import { cn } from "@acme/ui";
+import { Button } from "@acme/ui/button";
+import { useHideOnScroll } from "@acme/ui/hooks/use-hide-on-scroll";
+import { Icons } from "@acme/ui/icons";
+
+import { useScriptContext } from "../script-elements/script-context";
 import { DropdownMenuDemo } from "./nav-menu";
 import { Search } from "./search";
 
 export function OmniBar() {
+  const { setSelectedElement, selectedElement, elements } = useScriptContext();
   const { hidden } = useHideOnScroll({
     scrollHeight: 100,
     scrollUpHeight: 100,
@@ -62,6 +65,10 @@ export function OmniBar() {
           className="rounded-full text-zinc-100 hover:bg-gray-600 hover:text-zinc-100"
           size="icon"
           variant="ghost"
+          onClick={() => {
+            const currentIndex = selectedElement?.index ?? 0;
+            setSelectedElement(elements[currentIndex - 1]);
+          }}
         >
           <Icons.ChevronLeft size="lg" className={"stroke-1"} />
           <span className="sr-only">Edit</span>
@@ -70,6 +77,7 @@ export function OmniBar() {
           className="rounded-full text-zinc-100 hover:bg-gray-600 hover:text-zinc-100"
           size="icon"
           variant="ghost"
+          onClick={() => setSelectedElement(undefined)}
         >
           <Icons.CircleDot size="lg" className={"stroke-1"} />
           <span className="sr-only">Edit</span>
@@ -78,10 +86,15 @@ export function OmniBar() {
           className="rounded-full text-zinc-100 hover:bg-gray-600 hover:text-zinc-100"
           size="icon"
           variant="ghost"
+          onClick={() => {
+            const currentIndex = selectedElement?.index ?? 0;
+            setSelectedElement(elements[currentIndex + 1]);
+          }}
         >
           <Icons.ChevronRight size="lg" className={"stroke-1"} />
           <span className="sr-only">Edit</span>
         </Button>
+        {selectedElement?.index ?? 0}
         {/* <Button
           className="rounded-full text-zinc-100 hover:bg-gray-600 hover:text-zinc-100"
           size="icon"
@@ -141,26 +154,5 @@ export function OmniBar() {
 
       {/* </div> */}
     </div>
-  );
-}
-
-function ShareIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-      <polyline points="16 6 12 2 8 6" />
-      <line x1="12" x2="12" y1="2" y2="15" />
-    </svg>
   );
 }

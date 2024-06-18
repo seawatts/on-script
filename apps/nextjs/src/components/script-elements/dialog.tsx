@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 import { cn } from "@acme/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@acme/ui/avatar";
 import { Text } from "@acme/ui/typography";
@@ -17,12 +19,16 @@ const themeComponents = {
       <Text className="font-semibold">{composeCharacter(element)}</Text>
     ),
     Dialog: (element) => {
-      const { settings } = useScriptContext();
+      const { settings, selectedElement } = useScriptContext();
 
       const dialogWidth = "w-10/12 lg:w-7/12";
 
       return (
-        <div className="flex flex-col items-center rounded border p-4">
+        <div
+          className={cn("flex flex-col items-center rounded border p-4", {
+            "border-primary": selectedElement === element,
+          })}
+        >
           <div className={cn("flex flex-col gap-4", dialogWidth)}>
             {themeComponents[settings.theme].Character(element)}
             {themeComponents[settings.theme].Text(element)}
@@ -38,21 +44,48 @@ const themeComponents = {
   },
   [Theme.SCRIPT]: {
     Character: (element) => {
-      const { settings } = useScriptContext();
+      const { settings, selectedElement } = useScriptContext();
 
       return (
-        <Text {...settings.typography} className="text-center">
+        <Text
+          {...settings.typography}
+          className={cn("text-center transition-all", {
+            "text-muted": (selectedElement?.index ?? 0) > element.index,
+          })}
+        >
           {composeCharacter(element)}
         </Text>
       );
     },
     Dialog: (element) => {
-      const { settings } = useScriptContext();
+      const { settings, selectedElement, setSelectedElement } =
+        useScriptContext();
 
       const dialogWidth = "w-10/12 lg:w-7/12";
+      const dialogRef = useRef<HTMLDivElement>(null);
+
+      useEffect(() => {
+        if (selectedElement?.index === element.index && dialogRef.current) {
+          dialogRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "center",
+          });
+        }
+      }, [selectedElement?.index, element.index, dialogRef]);
 
       return (
-        <div className="flex flex-col items-center">
+        <div
+          ref={dialogRef}
+          className={cn(
+            "flex cursor-pointer flex-col items-center border py-2 transition-all",
+            {
+              "rounded border-primary":
+                selectedElement?.index === element.index,
+            },
+          )}
+          onClick={() => setSelectedElement(element)}
+        >
           <div className={cn("flex flex-col", dialogWidth)}>
             {themeComponents[settings.theme].Character(element)}
             {themeComponents[settings.theme].Text(element)}
@@ -61,9 +94,18 @@ const themeComponents = {
       );
     },
     Text: (element) => {
-      const { settings } = useScriptContext();
+      const { settings, selectedElement } = useScriptContext();
 
-      return <Text {...settings.typography}>{element.text}</Text>;
+      return (
+        <Text
+          {...settings.typography}
+          className={cn("transition-all", {
+            "text-muted": (selectedElement?.index ?? 0) > element.index,
+          })}
+        >
+          {element.text}
+        </Text>
+      );
     },
   },
 } as const satisfies themeComponents;

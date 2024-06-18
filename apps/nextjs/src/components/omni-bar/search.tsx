@@ -8,7 +8,7 @@ import {
   User,
 } from "lucide-react";
 
-import { Button } from "../button";
+import { Button } from "@acme/ui/button";
 import {
   CommandDialog,
   CommandEmpty,
@@ -18,8 +18,8 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "../command";
-import { Icons } from "../icons";
+} from "@acme/ui/command";
+import { Icons } from "@acme/ui/icons";
 
 export function Search() {
   const [open, setOpen] = useState(false);

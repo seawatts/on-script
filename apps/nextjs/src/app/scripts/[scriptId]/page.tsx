@@ -1,12 +1,12 @@
 "use client";
 
 import type { TextTypographyProps } from "@acme/ui/typography";
-import { OmniBar } from "@acme/ui/omni-bar/index";
 import { Separator } from "@acme/ui/separator";
 import { Text } from "@acme/ui/typography";
 
 import type { Element, IScene } from "~/components/script-elements/types";
 import { Header } from "~/components/header";
+import { OmniBar } from "~/components/omni-bar";
 import { Scene } from "~/components/script-elements/scene";
 import { ScriptProvider } from "~/components/script-elements/script-context";
 import {
@@ -34,6 +34,7 @@ export default function ScriptIdPage() {
   // const dialogWidth = "w-10/12 lg:w-7/12";
   const elements = [
     {
+      index: 0,
       text: "A VAST SPHERE OF FIRE, the fire of a thousand suns, slowly eats the night-time desert. A line of black type appears:",
       type: ElementType.ACTION,
     },
@@ -50,42 +51,50 @@ export default function ScriptIdPage() {
       character: "Voice",
       continued: true,
       direction: DialogDirection.OFF_SCREEN,
+      index: 1,
       text: "Dr Oppenheimer, as we begin, I believe you have a statement to read into the record?",
       type: ElementType.DIALOGUE,
     },
     {
       character: "Oppenheimer",
+      index: 2,
       text: "Yes, your honour-",
       type: ElementType.DIALOGUE,
     },
     {
       character: "Second Voice",
       direction: DialogDirection.OFF_SCREEN,
+      index: 3,
       text: "We’re not judges, doctor.",
       type: ElementType.DIALOGUE,
     },
     {
       character: "Oppenheimer",
+      index: 4,
       text: "No. Of course.",
       type: ElementType.DIALOGUE,
     },
     {
       character: "Oppenheimer",
+      index: 5,
       text: "(I start reading)",
       type: ElementType.PARENTHETICAL,
     },
     {
       character: "Oppenheimer",
+      index: 6,
       text: "Members of the Security Board, the so-called derogatory information in your indictment of me cannot be fairly understood except in the context of my life and work. This answer is a summary of relevant aspects of my life in more or less chronological order...",
       type: ElementType.DIALOGUE,
     },
     {
       character: "Senate Aide",
       direction: DialogDirection.VOICE_OVER,
+      index: 7,
       text: "How long did he testify?",
       type: ElementType.DIALOGUE,
     },
     {
+      index: 8,
       text: "CUT TO:",
       type: ElementType.TRANSITION,
     },
@@ -103,7 +112,7 @@ export default function ScriptIdPage() {
       {/* <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14"> */}
       {/* <Header /> */}
       <main className="container mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center">
-        <ScriptProvider>
+        <ScriptProvider elements={scenes[0]?.elements ?? []}>
           <div className="relative flex flex-col items-center justify-center gap-24">
             {/* <div className="sticky top-0 z-30 flex h-14 w-full items-center justify-center border-b bg-background text-center underline"> */}
             <Text className="underline">Oppenheimer</Text>
