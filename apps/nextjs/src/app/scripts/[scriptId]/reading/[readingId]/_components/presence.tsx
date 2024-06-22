@@ -7,7 +7,7 @@ import { createClient } from "~/supabase/client";
 
 export function Presence(props: { readingId: string }) {
   const user = useUserStore((state) => state.user);
-  const [onlineUsers, setOnlineUsers] = useState(0);
+  const [_onlineUsers, setOnlineUsers] = useState(0);
 
   useEffect(() => {
     if (!user) return;

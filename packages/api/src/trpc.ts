@@ -6,7 +6,7 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
-import { initTRPC, TRPCError } from "@trpc/server";
+import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -26,7 +26,7 @@ import { db } from "@on-script/db/client";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (options: { headers: Headers }) => {
+export const createTRPCContext = (options: { headers: Headers }) => {
   const authToken = options.headers.get("Authorization") ?? null;
 
   const source = options.headers.get("x-trpc-source") ?? "unknown";
@@ -91,7 +91,7 @@ export const publicProcedure = t.procedure;
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
+export const protectedProcedure = t.procedure.use(({ next }) => {
   return next({
     ctx: {
       // infers the `session` as non-nullable

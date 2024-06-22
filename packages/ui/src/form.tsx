@@ -22,6 +22,7 @@ import { cn } from "@on-script/ui";
 
 import { Label } from "./label";
 
+// eslint-disable-next-line unicorn/prevent-abbreviations
 const useForm = <TOut, TDef extends ZodTypeDef, TIn extends FieldValues>(
   props: Omit<UseFormProps<TIn>, "resolver"> & {
     schema: ZodType<TOut, TDef, TIn>;

@@ -19,6 +19,7 @@ export const createClient = () => {
         },
         remove(name: string, options: CookieOptions) {
           try {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             cookieStore.set({ name, value: "", ...options });
           } catch {
             // The `delete` method was called from a Server Component.
@@ -28,6 +29,7 @@ export const createClient = () => {
         },
         set(name: string, value: string, options: CookieOptions) {
           try {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             cookieStore.set({ name, value, ...options });
           } catch {
             // The `set` method was called from a Server Component.

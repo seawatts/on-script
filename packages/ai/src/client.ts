@@ -75,6 +75,7 @@ export async function submitMessageToThread<
   formatSchema: T;
   message: string;
 }): Promise<z.infer<T>> {
+  // eslint-disable-next-line unicorn/no-await-expression-member
   const threadId = props.threadId ?? (await openai.beta.threads.create({})).id;
 
   await openai.beta.threads.messages.create(threadId, {

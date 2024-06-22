@@ -23,6 +23,7 @@ export const createClient = (request: NextRequest) => {
         },
         remove(name: string, options: CookieOptions) {
           // If the cookie is removed, update the cookies for the request and response
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           request.cookies.set({
             name,
             value: "",
@@ -33,6 +34,7 @@ export const createClient = (request: NextRequest) => {
               headers: request.headers,
             },
           });
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           response.cookies.set({
             name,
             value: "",
@@ -41,6 +43,7 @@ export const createClient = (request: NextRequest) => {
         },
         set(name: string, value: string, options: CookieOptions) {
           // If the cookie is updated, update the cookies for the request and response
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           request.cookies.set({
             name,
             value,
@@ -51,6 +54,7 @@ export const createClient = (request: NextRequest) => {
               headers: request.headers,
             },
           });
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           response.cookies.set({
             name,
             value,

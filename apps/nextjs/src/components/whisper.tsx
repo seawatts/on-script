@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@on-script/ui/card";
-import { H1, H2, P, Prose, Text } from "@on-script/ui/typography";
+import { Prose, Text } from "@on-script/ui/typography";
 
 export function Whisper() {
   const [isRecording, setIsRecording] = useState(false);

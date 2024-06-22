@@ -23,6 +23,7 @@ const createQueryClient = () =>
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
+  // eslint-disable-next-line unicorn/prefer-ternary
   if (typeof window === "undefined") {
     // Server: always make a new query client
     return createQueryClient();

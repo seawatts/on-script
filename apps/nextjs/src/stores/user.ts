@@ -7,9 +7,6 @@ export interface UserState {
   user?: ClerkUser;
 }
 
-// export interface UserActions {}
-
-// export type UserStore = UserState & UserActions;
 export type UserStore = UserState;
 
 export const defaultInitState: UserState = {
@@ -20,8 +17,4 @@ export const createUserStore = (initState: UserState = defaultInitState) => {
   return createStore<UserStore>()((_set) => ({
     ...initState,
   }));
-};
-
-export const initUserStore = (user: ClerkUser): UserState => {
-  return { user };
 };

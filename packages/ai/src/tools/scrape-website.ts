@@ -126,11 +126,6 @@ type SceneSchema = z.infer<typeof sceneSchema>["scenes"];
 export async function scrapeWebsite(props: { url: string }) {
   let browser: Browser | undefined;
   let page: Page | undefined;
-  const foo = {
-    arg: "3",
-    bar: "1",
-    car: "2",
-  };
 
   try {
     let pdfBuffer: Buffer;

@@ -7,7 +7,7 @@ import { z } from "zod";
 // submitMessageToThread,
 // uploadFile,
 // } from "@on-script/ai";
-import { scrapeWebsite } from "@on-script/ai";
+// import { scrapeWebsite } from "@on-script/ai";
 import { desc } from "@on-script/db";
 import { Script } from "@on-script/db/schema";
 
@@ -18,7 +18,7 @@ import { Script } from "@on-script/db/schema";
 
 import { publicProcedure } from "../trpc";
 
-const characterFormat = z.object({
+const _characterFormat = z.object({
   characters: z.array(
     z.object({
       accent: z.string().optional(),
@@ -58,7 +58,7 @@ const characterFormat = z.object({
   ),
 });
 
-const scriptMetadataFormat = z.object({
+const _scriptMetadataFormat = z.object({
   awards: z.string().optional(),
   director: z.string().optional(),
   genre: z.string().optional(),
@@ -75,7 +75,7 @@ const scriptMetadataFormat = z.object({
   writers: z.string().optional(),
 });
 
-const scriptPageFormat = z.object({
+const _scriptPageFormat = z.object({
   generalLocation: z.string().optional(),
   lighting: z.string().optional(),
   lines: z.array(
@@ -102,17 +102,15 @@ export const scriptRouter = {
       orderBy: desc(Script.createdAt),
     });
   }),
-  byId: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(({ ctx, input }) => {
-      // return ctx.db.select().from(Script).where({ id: input.id });
-    }),
+  byId: publicProcedure.input(z.object({ id: z.string() })).query(() => {
+    // return ctx.db.select().from(Script).where({ id: input.id });
+  }),
   scrapeUrl: publicProcedure
     .input(z.object({ url: z.string() }))
-    .mutation(async ({ input }) => {
+    .mutation(() => {
       console.log("in here");
-      const websiteContent = await scrapeWebsite({ url: input.url });
-      console.log(websiteContent);
+      // const websiteContent = await scrapeWebsite({ url: input.url });
+      // console.log(websiteContent);
       // const vectorStore = await createVectorStore({ name: "scrape-2" });
       // await uploadFile({
       //   vectorStoreId: vectorStore.id,

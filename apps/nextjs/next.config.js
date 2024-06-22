@@ -15,12 +15,12 @@ const config = {
     "@on-script/ui",
     "@on-script/validators",
     "@on-script/ai",
+    "@on-script/script-parser",
   ],
   experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"],
+    serverComponentsExternalPackages: ["pdf-parse", "playwright"],
     typedRoutes: true,
   },
-
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },

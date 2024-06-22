@@ -12,6 +12,12 @@ const sceneSchema = z.object({
   scenes: z
     .array(
       z.object({
+        cameraShot: z
+          .string()
+          .describe(
+            `Description of the camera shot used in the scene. ${doNotHallucinate}`,
+          )
+          .nullish(),
         dialog: z
           .array(
             z.object({
@@ -30,6 +36,14 @@ const sceneSchema = z.object({
           .string()
           .describe(`The general location of the scene. ${doNotHallucinate}`)
           .nullish(),
+        interTitle: z
+          .string()
+          .describe(`Inter title text used in the scene. ${doNotHallucinate}`)
+          .nullish(),
+        lighting: z
+          .string()
+          .describe(`The lighting used in the scene. ${doNotHallucinate}`)
+          .nullish(),
         locationType: z
           .string()
           .describe(
@@ -46,21 +60,11 @@ const sceneSchema = z.object({
           .describe(`Any additional notes about the scene. ${doNotHallucinate}`)
           .nullish(),
         rawText: z.string().describe("The raw text of the scene."),
-        cameraShot: z
-          .string()
-          .describe(
-            `Description of the camera shot used in the scene. ${doNotHallucinate}`,
-          )
-          .nullish(),
         sceneNumber: z
           .number()
           .describe(
             "The number of the scene. This is optional, if it does not get mentioned then do not make it up and set it to null.",
           )
-          .nullish(),
-        interTitle: z
-          .string()
-          .describe(`Inter title text used in the scene. ${doNotHallucinate}`)
           .nullish(),
         slugLine: z
           .string()
@@ -68,10 +72,6 @@ const sceneSchema = z.object({
             "The slug line of the scene, typically describing the location and time. " +
               doNotHallucinate,
           )
-          .nullish(),
-        lighting: z
-          .string()
-          .describe(`The lighting used in the scene. ${doNotHallucinate}`)
           .nullish(),
         sounds: z
           .string()
@@ -82,10 +82,6 @@ const sceneSchema = z.object({
           .describe(
             `Any special notes regarding the scene. ${doNotHallucinate}`,
           )
-          .nullish(),
-        transition: z
-          .string()
-          .describe(`The transition to the next scene. ${doNotHallucinate}`)
           .nullish(),
         specificLocation: z
           .string()
@@ -99,6 +95,10 @@ const sceneSchema = z.object({
           .describe(
             `The time of day the scene takes place. ${doNotHallucinate}`,
           )
+          .nullish(),
+        transition: z
+          .string()
+          .describe(`The transition to the next scene. ${doNotHallucinate}`)
           .nullish(),
         visualStyle: z
           .string()

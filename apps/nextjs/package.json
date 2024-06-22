@@ -17,6 +17,7 @@
     "@clerk/nextjs": "5.1.6",
     "@on-script/api": "workspace:*",
     "@on-script/db": "workspace:*",
+    "sharp": "0.33.4",
     "@on-script/ui": "workspace:*",
     "@on-script/validators": "workspace:*",
     "@supabase/ssr": "0.3.0",

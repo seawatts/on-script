@@ -7,7 +7,7 @@ import type { IScene } from "./types";
 export function Scene(props: { scene: IScene }) {
   return (
     <motion.div className="flex flex-col gap-6">
-      {props.scene.elements.map((element, index) => {
+      {props.scene.elements.map((element, _index) => {
         switch (element.type) {
           // case ElementType.ACTION:
           // return <Action key={index} element={element} />;

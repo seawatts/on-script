@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import { transitionSet } from "./transition-keywords";
 
 export type ScriptElementType =
@@ -45,7 +46,7 @@ const isCharacter = (line: string): boolean => {
   );
 };
 
-const extractMetadata = (line: string): { name: string; metadata: any } => {
+const extractMetadata = (line: string): { name: string; metadata: object } => {
   const parentheticalRegex = /\(([^)]+)\)/g;
   const metadata: {
     continued?: boolean;
@@ -93,7 +94,6 @@ const parseLine = (line: string, previousLine: string): ScriptElement => {
       type: "parenthetical",
     };
   } else if (isCharacter(trimmedLine)) {
-    // @ts-ignore
     const { name, metadata } = extractMetadata(trimmedLine);
     return { character: name, content: "", metadata, type: "dialog" };
   } else if (isDialogue(trimmedLine, previousLine)) {
