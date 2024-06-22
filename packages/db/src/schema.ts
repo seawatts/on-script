@@ -206,8 +206,8 @@ export type ReadingSelectSchema = typeof Reading.$inferSelect;
 export type ReadingQuerySchema = ReadingSelectSchema & {
   createdBy: UserSelectSchema;
   script: ScriptSelectSchema & {
-    characters: CharacterSelectSchema[];
-    elements: ElementSelectSchema[];
+    characters?: CharacterSelectSchema[];
+    elements?: ElementSelectSchema[];
   };
   readingSessions: ReadingSessionSelectSchema[];
   currentElement?: ElementSelectSchema | null;

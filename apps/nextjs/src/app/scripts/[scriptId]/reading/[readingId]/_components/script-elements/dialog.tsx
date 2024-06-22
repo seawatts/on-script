@@ -116,7 +116,7 @@ export function Dialog(props: { element: ElementSelectSchema }) {
 }
 
 function composeCharacter(element: ElementSelectSchema) {
-  const extras = [];
+  const extras: string[] = [];
 
   // if (element.metadata?.direction === DialogDirection.OFF_SCREEN) {
   //   extras.push("(O.S.)");

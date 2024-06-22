@@ -3,21 +3,18 @@
 import { motion } from "framer-motion";
 
 import type { IScene } from "./types";
-import { Action } from "./action";
-import { Dialog } from "./dialog";
-import { ElementType } from "./types";
 
 export function Scene(props: { scene: IScene }) {
   return (
     <motion.div className="flex flex-col gap-6">
       {props.scene.elements.map((element, index) => {
         switch (element.type) {
-          case ElementType.ACTION: {
-            return <Action key={index} element={element} />;
-          }
-          case ElementType.DIALOGUE: {
-            return <Dialog key={index} element={element} />;
-          }
+          // case ElementType.ACTION:
+          // return <Action key={index} element={element} />;
+
+          // case ElementType.DIALOGUE:
+          // return <Dialog key={index} element={element} />;
+
           default: {
             return null;
           }

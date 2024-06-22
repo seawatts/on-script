@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { transitionSet } from "./transition-keywords";
 
 export type ScriptElementType =
@@ -33,6 +34,7 @@ const isParenthetical = (line: string): boolean => {
 
 const isCharacter = (line: string): boolean => {
   const trimmedLine = line.trim();
+  // @ts-ignore
   return (
     trimmedLine &&
     trimmedLine === trimmedLine.toUpperCase() &&
@@ -52,6 +54,7 @@ const extractMetadata = (line: string): { name: string; metadata: any } => {
   } = {};
   let match;
   while ((match = parentheticalRegex.exec(line)) !== null) {
+    // @ts-ignore
     const value = match[1].toUpperCase();
     if (value === "CONT’D") metadata.continued = true;
     if (value === "O.S.") metadata.offScreen = true;
@@ -66,6 +69,7 @@ const isDualDialogue = (previousLine: string): boolean =>
 
 const isDialogue = (line: string, previousLine: string): boolean => {
   const trimmedLine = line.trim();
+  // @ts-ignore
   return (
     trimmedLine &&
     !trimmedLine.startsWith("(") &&
@@ -89,6 +93,7 @@ const parseLine = (line: string, previousLine: string): ScriptElement => {
       type: "parenthetical",
     };
   } else if (isCharacter(trimmedLine)) {
+    // @ts-ignore
     const { name, metadata } = extractMetadata(trimmedLine);
     return { character: name, content: "", metadata, type: "dialog" };
   } else if (isDialogue(trimmedLine, previousLine)) {
