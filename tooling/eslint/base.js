@@ -1,6 +1,7 @@
 /// <reference types="./types.d.ts" />
 
 import eslint from "@eslint/js";
+import drizzlePlugin from "eslint-plugin-drizzle";
 import importPlugin from "eslint-plugin-import";
 import sortKeysFixPlugin from "eslint-plugin-sort-keys-fix";
 import turboPlugin from "eslint-plugin-turbo";
@@ -13,6 +14,7 @@ import tseslint from "typescript-eslint";
  */
 export const restrictEnvAccess = tseslint.config({
   files: ["**/*.js", "**/*.ts", "**/*.tsx"],
+  ignores: ["**/env.ts"],
   rules: {
     "no-restricted-properties": [
       "error",
@@ -48,6 +50,7 @@ export default tseslint.config(
       unicorn: unicornPlugin,
       "unused-imports": unusedImportsPlugin,
       "sort-keys-fix": sortKeysFixPlugin,
+      drizzle: drizzlePlugin,
     },
     extends: [
       eslint.configs.recommended,
@@ -57,12 +60,15 @@ export default tseslint.config(
     ],
     rules: {
       ...unicornPlugin.configs["flat/recommended"].rules,
+      ...drizzlePlugin.configs.recommended.rules,
+      "drizzle/enforce-delete-with-where": "error",
       "unicorn/no-null": "off",
       "unicorn/no-useless-undefined": "off",
       "unicorn/prevent-abbreviations": [
         "error",
         {
           allowList: {
+            db: true,
             Args: true,
             E2E: true,
             ENV: true,
@@ -88,17 +94,17 @@ export default tseslint.config(
           },
         },
       ],
-      // "no-unused-vars": "off", // or "@typescript-eslint/no-unused-vars": "off",
-      // "unused-imports/no-unused-imports": "error",
-      // "unused-imports/no-unused-vars": [
-      //   "warn",
-      //   {
-      //     vars: "all",
-      //     varsIgnorePattern: "^_",
-      //     args: "after-used",
-      //     argsIgnorePattern: "^_",
-      //   },
-      // ],
+      "no-unused-vars": "off", // or "@typescript-eslint/no-unused-vars": "off",
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": [
+        "warn",
+        {
+          vars: "all",
+          varsIgnorePattern: "^_",
+          args: "after-used",
+          argsIgnorePattern: "^_",
+        },
+      ],
       "sort-keys-fix/sort-keys-fix": "warn",
       // "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [

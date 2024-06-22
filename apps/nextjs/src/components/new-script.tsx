@@ -1,7 +1,7 @@
 "use client";
 
-import { CreatePostSchema } from "@acme/db/schema";
-import { Button } from "@acme/ui/button";
+import { CreateScriptSchema } from "@on-script/db/schema";
+import { Button } from "@on-script/ui/button";
 import {
   Form,
   FormControl,
@@ -9,19 +9,19 @@ import {
   FormItem,
   FormMessage,
   useForm,
-} from "@acme/ui/form";
-import { Input } from "@acme/ui/input";
-import { toast } from "@acme/ui/toast";
+} from "@on-script/ui/form";
+import { Input } from "@on-script/ui/input";
+import { toast } from "@on-script/ui/toast";
 
 import { api } from "~/trpc/react";
 
 export const NewScript = () => {
   const form = useForm({
     defaultValues: {
-      content: "",
+      // content: "",
       title: "",
     },
-    schema: CreatePostSchema,
+    schema: CreateScriptSchema,
   });
 
   const scrapeUrl = api.script.scrapeUrl.useMutation({

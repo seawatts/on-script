@@ -1,25 +1,31 @@
 import { Suspense } from "react";
+import { UserButton } from "@clerk/nextjs";
 
-import { H1 } from "@acme/ui/typography";
+import { db } from "@on-script/db/client";
+import { H1 } from "@on-script/ui/typography";
 
-// export const runtime = "edge";
+import { ScriptsList, ScriptsListLoading } from "../_components/scripts-list";
 
-export default function HomePage() {
-  // You can await this here if you don't want to show Suspense fallback below
-  // const posts = api.post.all();
+export default function Page() {
+  const scripts = db.query.Script.findMany({
+    with: {
+      characters: true,
+      elements: true,
+      readings: true,
+    },
+  });
 
   return (
     <main className="container h-screen py-16">
       <div className="flex flex-col items-center justify-center gap-4">
         <H1>
-          Script <span className="text-primary">AI</span>
+          <span className="text-primary">On</span>Script
+          <UserButton />
         </H1>
 
         <div className="w-full max-w-2xl overflow-y-scroll">
-          <Suspense
-            fallback={<div className="flex w-full flex-col gap-4"></div>}
-          >
-            {/* <PostList posts={posts} /> */}
+          <Suspense fallback={<ScriptsListLoading />}>
+            <ScriptsList scripts={scripts} />
           </Suspense>
         </div>
       </div>

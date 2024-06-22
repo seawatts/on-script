@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 
-import { CreatePostSchema } from "@acme/db/schema";
-import { Card, CardContent, CardFooter, CardHeader } from "@acme/ui/card";
+import { CreateScriptSchema } from "@on-script/db/schema";
+import { Card, CardContent } from "@on-script/ui/card";
 import {
   Form,
   FormControl,
@@ -11,19 +11,19 @@ import {
   FormItem,
   FormMessage,
   useForm,
-} from "@acme/ui/form";
-import { Icons } from "@acme/ui/icons";
-import { Input } from "@acme/ui/input";
-import { P, Text } from "@acme/ui/typography";
+} from "@on-script/ui/form";
+import { Icons } from "@on-script/ui/icons";
+import { Input } from "@on-script/ui/input";
+import { P, Text } from "@on-script/ui/typography";
 
 export const ScriptSearch = () => {
   const form = useForm({
     defaultValues: {
-      content: "",
-      title: "",
+      // content: "",
+      // title: "",
       // searchValue: "",
     },
-    schema: CreatePostSchema,
+    schema: CreateScriptSchema,
   });
 
   return (

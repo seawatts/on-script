@@ -26,3 +26,12 @@ export function createId(props?: {
 
   return id;
 }
+
+export const generateRandomSlug = ({ length }: { length: number }): string => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let result = "";
+  for (let index = 0; index < length; index++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+};

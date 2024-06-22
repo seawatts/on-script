@@ -1,9 +1,11 @@
-import { cn } from "@acme/ui";
-import { Button } from "@acme/ui/button";
-import { useHideOnScroll } from "@acme/ui/hooks/use-hide-on-scroll";
-import { Icons } from "@acme/ui/icons";
+"use client";
 
-import { useScriptContext } from "../script-elements/script-context";
+import { cn } from "@on-script/ui";
+import { Button } from "@on-script/ui/button";
+import { useHideOnScroll } from "@on-script/ui/hooks/use-hide-on-scroll";
+import { Icons } from "@on-script/ui/icons";
+
+import { useScriptContext } from "~/app/scripts/[scriptId]/reading/[readingId]/_components/script-elements/script-context";
 import { DropdownMenuDemo } from "./nav-menu";
 import { Search } from "./search";
 
@@ -33,7 +35,7 @@ export function OmniBar() {
           variant="ghost"
         >
           <div className="relative">
-            <img
+            {/* <img
               alt="Avatar 3"
               className="rounded-full bg-gray-700 opacity-50"
               height="32"
@@ -43,7 +45,7 @@ export function OmniBar() {
                 objectFit: "cover",
               }}
               width="32"
-            />
+            /> */}
             <span className="absolute left-0 top-0 flex h-full w-full items-center justify-center text-xs font-bold text-white">
               9+
             </span>

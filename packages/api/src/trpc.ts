@@ -10,7 +10,9 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-// import { db } from "@acme/db/client";
+import { db } from "@on-script/db/client";
+
+// import { db } from "@on-script/db/client";
 
 /**
  * 1. CONTEXT
@@ -31,7 +33,7 @@ export const createTRPCContext = async (options: { headers: Headers }) => {
   console.log(">>> tRPC Request from", source, "by");
 
   return {
-    // db,
+    db,
     token: authToken,
   };
 };

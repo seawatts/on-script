@@ -71,7 +71,7 @@ tooling
       └─ shared tsconfig you can extend from
 ```
 
-> In this template, we use `@acme` as a placeholder for package names. As a user, you might want to replace it with your own organization or project name. You can use find-and-replace to change all the instances of `@acme` to something like `@my-company` or `@project-name`.
+> In this template, we use `@on-script` as a placeholder for package names. As a user, you might want to replace it with your own organization or project name. You can use find-and-replace to change all the instances of `@on-script` to something like `@my-company` or `@project-name`.
 
 ## Quick Start
 
@@ -179,7 +179,7 @@ Let's deploy the Next.js application to [Vercel](https://vercel.com). If you've 
 
 1. Create a new project on Vercel, select the `apps/nextjs` folder as the root directory. Vercel's zero-config system should handle all configurations for you.
 
-2. Add your `DATABASE_URL` environment variable.
+2. Add your `POSTGRES_URL` environment variable.
 
 3. Done! Your app should successfully deploy. Assign your domain and use that instead of `localhost` for the `url` in the Expo app so that your Expo app can communicate with your backend when you are not in development.
 

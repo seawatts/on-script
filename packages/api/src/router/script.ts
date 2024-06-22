@@ -6,13 +6,15 @@ import { z } from "zod";
 // createVectorStore,
 // submitMessageToThread,
 // uploadFile,
-// } from "@acme/ai";
-import { scrapeWebsite } from "@acme/ai";
+// } from "@on-script/ai";
+import { scrapeWebsite } from "@on-script/ai";
+import { desc } from "@on-script/db";
+import { Script } from "@on-script/db/schema";
 
-// import { scrapeWebsite } from "@acme/ai/tools/scrape-website";
+// import { scrapeWebsite } from "@on-script/ai/tools/scrape-website";
 
-// import { desc, eq } from "@acme/db";
-// import { CreatePostSchema, Post } from "@acme/db/schema";
+// import { desc, eq } from "@on-script/db";
+// import { CreatePostSchema, Post } from "@on-script/db/schema";
 
 import { publicProcedure } from "../trpc";
 
@@ -23,65 +25,65 @@ const characterFormat = z.object({
       aesthetics: z.string().optional(),
       ageRange: z.string().optional(),
       backstory: z.string().optional(),
-      characterArc: z.string().optional(),
-      difficulty: z.string().optional(),
-      description: z.string().optional(),
-      importance: z.string().optional(),
-      costumeRequirements: z.string().optional(),
-      name: z.string().optional(),
-      emotionalRange: z.string().optional(),
-      namePronunciation: z.string().optional(),
-      lines: z.number().optional(),
-      role: z.string().optional(),
-      challenges: z.string().optional(),
       catchPhrases: z.string().optional(),
-      personalityTraits: z.string().optional(),
-      humor: z.string().optional(),
-      physicalTraits: z.string().optional(),
+      challenges: z.string().optional(),
+      characterArc: z.string().optional(),
+      costumeRequirements: z.string().optional(),
+      description: z.string().optional(),
+      difficulty: z.string().optional(),
       dislikes: z.string().optional(),
-      quote: z.string().optional(),
+      emotionalRange: z.string().optional(),
       fears: z.string().optional(),
-      relationships: z.string().optional(),
       hobbies: z.string().optional(),
+      humor: z.string().optional(),
+      importance: z.string().optional(),
       inspirations: z.string().optional(),
-      props: z.string().optional(),
       likes: z.string().optional(),
-      topScene: z.string().optional(),
+      lines: z.number().optional(),
       motivations: z.string().optional(),
-      voiceType: z.string().optional(),
+      name: z.string().optional(),
+      namePronunciation: z.string().optional(),
+      personalityTraits: z.string().optional(),
+      physicalTraits: z.string().optional(),
+      props: z.string().optional(),
+      quote: z.string().optional(),
+      relationships: z.string().optional(),
+      role: z.string().optional(),
       skillsTalents: z.string().optional(),
       strengths: z.string().optional(),
+      topScene: z.string().optional(),
+      voiceType: z.string().optional(),
       weaknesses: z.string().optional(),
     }),
   ),
 });
 
 const scriptMetadataFormat = z.object({
+  awards: z.string().optional(),
   director: z.string().optional(),
   genre: z.string().optional(),
   logLine: z.string().optional(),
   name: z.string().optional(),
+  nominations: z.string().optional(),
   pageCount: z.string().optional(),
   setting: z.string().optional(),
-  awards: z.string().optional(),
   targetAudience: z.string().optional(),
-  nominations: z.string().optional(),
   themes: z.string().optional(),
   timePeriod: z.string().optional(),
-  topScenes: z.string().optional(),
   tone: z.string().optional(),
+  topScenes: z.string().optional(),
   writers: z.string().optional(),
 });
 
 const scriptPageFormat = z.object({
   generalLocation: z.string().optional(),
+  lighting: z.string().optional(),
   lines: z.array(
     z.object({
       character: z.string(),
       dialogue: z.string(),
     }),
   ),
-  lighting: z.string().optional(),
   name: z.string().optional(),
   narration: z.string().optional(),
   notes: z.string().optional(),
@@ -94,23 +96,16 @@ const scriptPageFormat = z.object({
 });
 
 export const scriptRouter = {
-  all: publicProcedure
-    .input(z.object({ url: z.string() }))
-    .query(({ input }) => {
-      // return ctx.db.select().from(schema.post).orderBy(desc(schema.post.id));
-      // return ctx.db.query.Post.findMany({
-      //   orderBy: desc(Post.id),
-      //   limit: 10,
-      // });
-    }),
+  all: publicProcedure.query(({ ctx }) => {
+    return ctx.db.query.Script.findMany({
+      limit: 10,
+      orderBy: desc(Script.createdAt),
+    });
+  }),
   byId: publicProcedure
     .input(z.object({ id: z.string() }))
-    .query(({ input }) => {
-      // return ctx.db.select().from(schema.post).orderBy(desc(schema.post.id));
-      // return ctx.db.query.Post.findMany({
-      //   orderBy: desc(Post.id),
-      //   limit: 10,
-      // });
+    .query(({ ctx, input }) => {
+      // return ctx.db.select().from(Script).where({ id: input.id });
     }),
   scrapeUrl: publicProcedure
     .input(z.object({ url: z.string() }))

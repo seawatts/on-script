@@ -1,5 +1,5 @@
 {
-  "name": "@acme/db",
+  "name": "@on-script/db",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -25,26 +25,34 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "push": "pnpm with-env drizzle-kit push",
+    "migrate": "pnpm with-env drizzle-kit migrate",
+    "seed": "pnpm with-env tsx src/seed.ts",
+    "gen-migration": "pnpm with-env drizzle-kit generate",
     "studio": "pnpm with-env drizzle-kit studio",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@on-script/id": "workspace:*",
     "@t3-oss/env-core": "0.10.1",
     "@vercel/postgres": "^0.8.0",
     "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1",
+    "lodash-es": "4.17.21",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
+    "@on-script/eslint-config": "workspace:*",
+    "@on-script/prettier-config": "workspace:*",
+    "@on-script/tsconfig": "workspace:*",
+    "@types/lodash-es": "4.17.12",
     "dotenv-cli": "^7.4.2",
     "drizzle-kit": "^0.22.7",
     "eslint": "^9.5.0",
     "prettier": "^3.3.2",
-    "typescript": "^5.4.5"
+    "supabase": "1.178.2",
+    "tsx": "4.15.7",
+    "typescript": "^5.5.2"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@on-script/prettier-config"
 }

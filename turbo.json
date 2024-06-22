@@ -58,6 +58,18 @@
       "cache": false,
       "interactive": true
     },
+    "migrate": {
+      "cache": false,
+      "interactive": true
+    },
+    "gen-migration": {
+      "cache": false,
+      "interactive": true
+    },
+    "seed": {
+      "cache": false,
+      "interactive": true
+    },
     "studio": {
       "cache": false,
       "persistent": true

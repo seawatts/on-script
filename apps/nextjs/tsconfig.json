@@ -1,5 +1,5 @@
 {
-  "extends": "@acme/tsconfig/base.json",
+  "extends": "@on-script/tsconfig/base.json",
   "compilerOptions": {
     "lib": ["es2022", "dom", "dom.iterable"],
     "jsx": "preserve",
@@ -11,6 +11,6 @@
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
     "module": "esnext"
   },
-  "include": [".", ".next/types/**/*.ts", "../../packages/ui/src/hooks"],
+  "include": [".", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

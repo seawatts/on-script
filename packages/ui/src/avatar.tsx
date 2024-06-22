@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 
-import { cn } from "@acme/ui";
+import { cn } from "@on-script/ui";
 
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
@@ -11,10 +11,7 @@ const Avatar = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
-    className={cn(
-      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
-      className,
-    )}
+    className={cn("relative flex h-10 w-10 shrink-0 rounded-full", className)}
     {...props}
   />
 ));
@@ -45,6 +42,21 @@ const AvatarFallback = React.forwardRef<
     {...props}
   />
 ));
+
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
-export { Avatar, AvatarImage, AvatarFallback };
+const AvatarOnlineIndicator = (props: { online: boolean }) => {
+  return (
+    <span
+      className={cn(
+        "absolute bottom-0 right-0 z-50 block size-2.5 rounded-full ring-2 ring-background",
+        {
+          "bg-gray-700": !props.online,
+          "bg-green-400": props.online,
+        },
+      )}
+    />
+  );
+};
+
+export { Avatar, AvatarImage, AvatarFallback, AvatarOnlineIndicator };

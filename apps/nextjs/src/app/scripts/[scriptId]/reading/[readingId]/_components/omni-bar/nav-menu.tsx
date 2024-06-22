@@ -15,7 +15,7 @@ import {
   Users,
 } from "lucide-react";
 
-import { Button } from "@acme/ui/button";
+import { Button } from "@on-script/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,8 +29,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@acme/ui/dropdown-menu";
-import { Icons } from "@acme/ui/icons";
+} from "@on-script/ui/dropdown-menu";
+import { Icons } from "@on-script/ui/icons";
 
 export function DropdownMenuDemo() {
   return (

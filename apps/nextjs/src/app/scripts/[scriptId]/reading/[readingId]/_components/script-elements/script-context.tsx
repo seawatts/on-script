@@ -3,9 +3,8 @@
 import type { PropsWithChildren } from "react";
 import React, { createContext, useContext, useMemo, useState } from "react";
 
-import type { TextTypographyProps } from "@acme/ui/typography";
-
-import type { Element } from "./types";
+import type { ElementSelectSchema } from "@on-script/db/schema";
+import type { TextTypographyProps } from "@on-script/ui/typography";
 
 export enum Theme {
   PLAYFUL = "PLAYFUL",
@@ -20,22 +19,28 @@ export interface ScriptSettings {
 export interface ScriptContextProps {
   settings: ScriptSettings;
   setSettings: React.Dispatch<React.SetStateAction<ScriptSettings>>;
-  selectedElement: Element | undefined;
-  setSelectedElement: React.Dispatch<React.SetStateAction<Element | undefined>>;
-  elements: Element[];
-  setElements: React.Dispatch<React.SetStateAction<Element[]>>;
+  selectedElement: ElementSelectSchema | undefined;
+  setSelectedElement: React.Dispatch<
+    React.SetStateAction<ElementSelectSchema | undefined>
+  >;
+  elements: ElementSelectSchema[];
+  setElements: React.Dispatch<React.SetStateAction<ElementSelectSchema[]>>;
 }
 
 const ScriptContext = createContext<ScriptContextProps | undefined>(undefined);
 
 export interface ScriptProviderProps {
   settings?: ScriptSettings;
-  elements?: Element[];
+  elements?: ElementSelectSchema[];
 }
 
 function ScriptProvider(props: PropsWithChildren<ScriptProviderProps>) {
-  const [selectedElement, setSelectedElement] = useState<Element | undefined>();
-  const [elements, setElements] = useState<Element[]>(props.elements ?? []);
+  const [selectedElement, setSelectedElement] = useState<
+    ElementSelectSchema | undefined
+  >();
+  const [elements, setElements] = useState<ElementSelectSchema[]>(
+    props.elements ?? [],
+  );
   const [settings, setSettings] = useState<ScriptSettings>(
     props.settings ?? {
       theme: Theme.SCRIPT,

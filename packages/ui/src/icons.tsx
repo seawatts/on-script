@@ -77,7 +77,7 @@ import {
   X,
 } from "lucide-react";
 
-import { cn, twx } from "@acme/ui";
+import { cn, twx } from "@on-script/ui";
 
 export type Icon = IconNode;
 

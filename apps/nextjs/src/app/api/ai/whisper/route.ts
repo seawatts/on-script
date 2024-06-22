@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import OpenAI, { toFile } from "openai";
 
-import { env } from "~/env";
-
 // import type { NextRequest } from "next/server";
-console.log(process.env, env);
 
 const openai = new OpenAI({
   // apiKey: env.OPENAI_API_KEY,

@@ -1,5 +1,5 @@
 {
-  "name": "create-t3-turbo",
+  "name": "on-script",
   "private": true,
   "engines": {
     "node": ">=20.12.0"
@@ -9,10 +9,13 @@
     "build": "turbo run build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
-    "db:push": "turbo -F @acme/db push",
-    "db:studio": "turbo -F @acme/db studio",
+    "db:gen-migration": "turbo -F @on-script/db gen-migration",
+    "db:migrate": "turbo -F @on-script/db migrate",
+    "db:seed": "turbo -F @on-script/db seed",
+    "db:push": "turbo -F @on-script/db push",
+    "db:studio": "turbo -F @on-script/db studio",
     "dev": "turbo watch dev",
-    "dev:next": "turbo watch dev -F @acme/nextjs...",
+    "dev:next": "turbo watch dev -F @on-script/nextjs...",
     "format": "turbo run format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo run format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
     "lint": "turbo run lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
@@ -24,7 +27,7 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@acme/prettier-config": "workspace:*",
+    "@on-script/prettier-config": "workspace:*",
     "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.2.2",
     "@turbo/gen": "^2.0.4",
@@ -33,9 +36,9 @@
     "prettier": "^3.3.2",
     "tsc-files": "1.1.4",
     "turbo": "^2.0.4",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.2"
   },
-  "prettier": "@acme/prettier-config",
+  "prettier": "@on-script/prettier-config",
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"

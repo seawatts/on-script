@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 
-import { cn } from "@acme/ui";
-import { Button } from "@acme/ui/button";
-import { useHideOnScroll } from "@acme/ui/hooks/use-hide-on-scroll";
-import { Icons } from "@acme/ui/icons";
-import { Sheet, SheetContent, SheetTrigger } from "@acme/ui/sheet";
+import { cn } from "@on-script/ui";
+import { Button } from "@on-script/ui/button";
+import { useHideOnScroll } from "@on-script/ui/hooks/use-hide-on-scroll";
+import { Icons } from "@on-script/ui/icons";
+import { Sheet, SheetContent, SheetTrigger } from "@on-script/ui/sheet";
 
 export function Header() {
   const { hidden } = useHideOnScroll({

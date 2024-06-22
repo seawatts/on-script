@@ -10,14 +10,15 @@ const config = {
 
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
-    "@acme/api",
-    "@acme/db",
-    "@acme/ui",
-    "@acme/validators",
-    "@acme/ai",
+    "@on-script/api",
+    "@on-script/db",
+    "@on-script/ui",
+    "@on-script/validators",
+    "@on-script/ai",
   ],
   experimental: {
     serverComponentsExternalPackages: ["pdf-parse"],
+    typedRoutes: true,
   },
 
   /** We already do linting and typechecking as separate tasks in CI */

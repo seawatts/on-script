@@ -95,3 +95,15 @@ declare module "eslint-plugin-unicorn" {
 
   export = plugin as PluginUnicorn;
 }
+
+declare module "eslint-plugin-drizzle" {
+  import type { TSESLint } from "@typescript-eslint/utils";
+  import type { ConfigWithExtends } from "typescript-eslint";
+
+  type Configs = "recommended" | "all";
+  interface PluginUnicorn extends TSESLint.FlatConfig.Plugin {
+    configs: Record<Configs, ConfigWithExtends>;
+  }
+
+  export = plugin as PluginUnicorn;
+}

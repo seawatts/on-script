@@ -1,5 +1,5 @@
 {
-  "name": "@acme/prettier-config",
+  "name": "@on-script/prettier-config",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -14,11 +14,11 @@
   "dependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
     "prettier": "^3.3.2",
-    "prettier-plugin-tailwindcss": "^0.6.4"
+    "prettier-plugin-tailwindcss": "^0.6.5"
   },
   "devDependencies": {
-    "@acme/tsconfig": "workspace:*",
-    "typescript": "^5.4.5"
+    "@on-script/tsconfig": "workspace:*",
+    "typescript": "^5.5.2"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@on-script/prettier-config"
 }

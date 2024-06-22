@@ -1,17 +1,16 @@
 import type { Metadata, Viewport } from "next";
 import { Courier_Prime } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
+import { cn } from "@on-script/ui";
+import { ThemeProvider } from "@on-script/ui/theme";
+import { Toaster } from "@on-script/ui/toast";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
-
-import { cn } from "@acme/ui";
-import { ThemeProvider, ThemeToggle } from "@acme/ui/theme";
-import { Toaster } from "@acme/ui/toast";
-
-import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
 import { env } from "~/env";
+import { UserStoreProvider } from "~/providers/user-store-provider";
 
 // If loading a variable font, you don't need to specify the font weight
 const courier = Courier_Prime({
@@ -22,23 +21,23 @@ const courier = Courier_Prime({
 });
 
 export const metadata: Metadata = {
-  description: "Simple monorepo with shared backend for web & mobile apps",
+  description: "OnScript is an AI script-reading tool",
   metadataBase: new URL(
     env.VERCEL_ENV === "production"
-      ? "https://turbo.t3.gg"
+      ? "https://on-script.vercel.app"
       : "http://localhost:3000",
   ),
   openGraph: {
-    description: "Simple monorepo with shared backend for web & mobile apps",
-    siteName: "Create T3 Turbo",
-    title: "Create T3 Turbo",
-    url: "https://create-t3-turbo.vercel.app",
+    description: "OnScript is an AI script-reading tool",
+    siteName: "OnScript",
+    title: "OnScript",
+    url: "https://on-script.vercel.app",
   },
-  title: "Create T3 Turbo",
+  title: "OnScript",
   twitter: {
     card: "summary_large_image",
-    creator: "@jullerino",
-    site: "@jullerino",
+    creator: "@seawatts",
+    site: "@seawatts",
   },
 };
 
@@ -51,23 +50,35 @@ export const viewport: Viewport = {
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "relative min-h-screen bg-background font-sans text-foreground antialiased",
-          GeistSans.variable,
-          GeistMono.variable,
-          courier.variable,
-        )}
-      >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TRPCReactProvider>{props.children}</TRPCReactProvider>
-          {/* <div className="fixed bottom-4 right-4">
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={cn(
+            "relative min-h-screen bg-background font-sans text-foreground antialiased",
+            GeistSans.variable,
+            GeistMono.variable,
+            courier.variable,
+          )}
+        >
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {/* <TRPCReactProvider> */}
+            {/* <header>
+                <SignedOut>
+                <SignInButton />
+                </SignedOut>
+                <SignedIn>
+                <UserButton />
+                </SignedIn>
+                </header> */}
+            <UserStoreProvider>{props.children}</UserStoreProvider>
+            {/* </TRPCReactProvider> */}
+            {/* <div className="fixed bottom-4 right-4">
             <ThemeToggle />
           </div> */}
-          <Toaster />
-        </ThemeProvider>
-      </body>
-    </html>
+            <Toaster />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

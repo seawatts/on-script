@@ -1,29 +1,48 @@
-import { Button } from "@acme/ui/button";
-import { Form } from "@acme/ui/form";
-import { Icons } from "@acme/ui/icons";
-import { Input } from "@acme/ui/input";
-import { H1 } from "@acme/ui/typography";
+import { Suspense } from "react";
 
-import { JoinReading } from "../components/join-reading";
-import { NewScript } from "../components/new-script";
-import { ScriptSearch } from "../components/script-search";
+import { db } from "@on-script/db/client";
+import { H1 } from "@on-script/ui/typography";
+
+import { ReadingList, ReadingListLoading } from "~/components/readings-list";
+import { ScriptsList, ScriptsListLoading } from "./_components/scripts-list";
 
 // export const runtime = "edge";
 
-export default function HomePage() {
-  // You can await this here if you don't want to show Suspense fallback below
-  // const posts = api.post.all();
+export default function Page() {
+  const readings = db.query.Reading.findMany({
+    orderBy: (reading, { asc }) => asc(reading.createdAt),
+    where: (reading, { isNull }) => isNull(reading.endedAt),
+    with: {
+      createdBy: true,
+      currentElement: true,
+      readingSessions: true,
+      script: true,
+    },
+  }).execute();
+
+  const scripts = db.query.Script.findMany({
+    with: {
+      characters: true,
+      elements: true,
+      readings: true,
+    },
+  });
 
   return (
     <main className="container h-screen py-16">
       <div className="flex flex-col items-center justify-center gap-4">
         <H1>
           <span className="text-primary">On</span>Script
-          {/* <span className="text-primary">On</span>Script<span className="text-primary">AI</span> */}
         </H1>
-        <ScriptSearch />
-        <JoinReading />
-        <NewScript />
+        {/* <NewReadingButton scriptId={props.params.scriptId} /> */}
+        <div className="flex w-full max-w-2xl flex-col gap-4 overflow-y-scroll">
+          <Suspense fallback={<ReadingListLoading />}>
+            <ReadingList readings={readings} />
+          </Suspense>
+          <Suspense fallback={<ScriptsListLoading />}>
+            <ScriptsList scripts={scripts} />
+          </Suspense>
+        </div>
       </div>
     </main>
   );

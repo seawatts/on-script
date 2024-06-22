@@ -1,4 +1,4 @@
-import { createId } from "@acme/id";
+import { createId } from "@on-script/id";
 
 interface Line {
   lineText: string;

@@ -2,15 +2,15 @@
 
 import { useRef, useState } from "react";
 
-import { Button } from "@acme/ui/button";
+import { Button } from "@on-script/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@acme/ui/card";
-import { H1, H2, P, Prose, Text } from "@acme/ui/typography";
+} from "@on-script/ui/card";
+import { H1, H2, P, Prose, Text } from "@on-script/ui/typography";
 
 export function Whisper() {
   const [isRecording, setIsRecording] = useState(false);

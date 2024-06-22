@@ -2,8 +2,8 @@ import type { VariantProps } from "class-variance-authority";
 import type { TwcComponentProps } from "react-twc";
 import { cva } from "class-variance-authority";
 
-import { cn, twx } from "@acme/ui";
-import { Skeleton } from "@acme/ui/skeleton";
+import { cn, twx } from "@on-script/ui";
+import { Skeleton } from "@on-script/ui/skeleton";
 
 export const typographyVariants = cva(undefined, {
   variants: {
