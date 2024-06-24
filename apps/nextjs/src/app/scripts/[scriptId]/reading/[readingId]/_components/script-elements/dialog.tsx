@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 import { useServerAction } from "zsa-react";
 
@@ -64,20 +65,35 @@ const themeComponents = {
       const isPastElement = (selectedElement?.index ?? 0) > element.index;
       const isCurrentElement = selectedElement?.index === element.index;
       return (
-        <Text
-          {...readingSettings.typography}
-          className={cn(
-            "mx-auto flex max-w-fit text-center uppercase transition-all",
-            {
-              "border-b-2 border-muted": isCurrentUser && isPastElement,
-              "border-b-2 border-primary": isCurrentUser && !isPastElement,
-              "text-muted": isPastElement,
-            },
-          )}
-        >
-          {/* {composeCharacter(element)} */}
-          {character?.name}
-        </Text>
+        <div className="relative">
+          <Text
+            {...readingSettings.typography}
+            className={cn(
+              "mx-auto flex max-w-fit text-center uppercase transition-all",
+              {
+                "border-b-2 border-muted": isCurrentUser && isPastElement,
+                "border-b-2 border-primary": isCurrentUser && !isPastElement,
+                "text-muted": isPastElement,
+              },
+            )}
+          >
+            {/* {composeCharacter(element)} */}
+            {character?.name}
+          </Text>
+          <div className="absolute -top-1 right-0">
+            {user?.imageUrl && (
+              <Image
+                src={user.imageUrl}
+                className={cn("rounded-full", {
+                  "brightness-50": isPastElement,
+                })}
+                width={20}
+                height={20}
+                alt={user.fullName ?? "Reader"}
+              />
+            )}
+          </div>
+        </div>
       );
     },
     Dialog: (element) => {

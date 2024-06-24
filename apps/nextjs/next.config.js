@@ -21,6 +21,9 @@ const config = {
     serverComponentsExternalPackages: ["pdf-parse", "playwright"],
     typedRoutes: true,
   },
+  images: {
+    domains: ["img.clerk.com"],
+  },
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
