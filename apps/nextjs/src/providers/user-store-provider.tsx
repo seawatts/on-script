@@ -28,7 +28,7 @@ export const UserStoreProvider = ({
   }
 
   useEffect(() => {
-    if (user && storeRef.current?.getState().user?.id === user.id) {
+    if (storeRef.current?.getState().user?.id === user?.id) {
       return;
     }
 

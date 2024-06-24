@@ -1,20 +1,21 @@
 "use client";
 
 import { useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 
 import { useReadingStore } from "~/providers/reading-store-provider";
-import { useUserStore } from "~/providers/user-store-provider";
 import { createClient } from "~/supabase/client";
 
 export function Presence() {
   const reading = useReadingStore((store) => store.reading);
   const setOnlineUsers = useReadingStore((store) => store.setOnlineUsers);
-  const user = useUserStore((state) => state.user);
+  // const user = useUerStore((state) => state.user);
+  const { user } = useUser();
+
+  const supabase = createClient();
 
   useEffect(() => {
     if (!user || !reading) return;
-
-    const supabase = createClient();
 
     const readingChannel = supabase.channel(`presence:${reading.id}`, {
       config: {
@@ -28,12 +29,14 @@ export function Presence() {
         const onlineUsers = new Set(
           Object.keys(readingChannel.presenceState()),
         );
+        console.log("presence sync", onlineUsers);
         setOnlineUsers(onlineUsers);
       })
-
-      .subscribe((status) => {
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      .subscribe(async (status) => {
         if (status === "SUBSCRIBED") {
-          void readingChannel.track({
+          console.log("readingChannel.track", user.id);
+          await readingChannel.track({
             onlineAt: new Date().toISOString(),
             userId: user.id,
           });
@@ -43,6 +46,6 @@ export function Presence() {
     return () => {
       void supabase.removeChannel(readingChannel);
     };
-  }, [user, reading, setOnlineUsers]);
+  }, [user, reading, setOnlineUsers, supabase]);
   return <></>;
 }

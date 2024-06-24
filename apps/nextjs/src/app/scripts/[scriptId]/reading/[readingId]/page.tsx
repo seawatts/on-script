@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { ClerkProvider } from "@clerk/nextjs";
 
 import { Separator } from "@on-script/ui/separator";
 
@@ -23,7 +24,9 @@ export default async function Page(props: {
     <div className="flex min-h-screen flex-col py-4 sm:gap-4">
       <main className="container mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center gap-4">
         <ReadingStoreProvider reading={reading}>
-          <Presence />
+          <ClerkProvider>
+            <Presence />
+          </ClerkProvider>
           <Title />
           <Separator />
           <ElementsList />

@@ -1,9 +1,9 @@
-import type { useUser } from "@clerk/nextjs";
+import type { currentUser } from "@clerk/nextjs/server";
 import { createStore } from "zustand/vanilla";
 
 import type { TextTypographyProps } from "@on-script/ui/typography";
 
-export type ClerkUser = ReturnType<typeof useUser>["user"];
+export type ClerkUser = NonNullable<Awaited<ReturnType<typeof currentUser>>>;
 
 export enum ReadingTheme {
   PLAYFUL = "PLAYFUL",
@@ -26,27 +26,14 @@ export interface ReadingActions {
 
 export type UserStore = UserState & ReadingActions;
 
-export const defaultInitState: UserState = {
-  readingSettings: {
-    theme: ReadingTheme.SCRIPT,
-    typography: {
-      size: "script",
-      spacing: "script",
-      textFlow: "pretty",
-      variant: "script-mono",
-    },
-  },
-  user: undefined,
-};
-
-export const createUserStore = (initState: UserState = defaultInitState) => {
+export const createUserStore = (initState: UserState) => {
   return createStore<UserStore>()((_set) => ({
     ...initState,
     setReadingSettings: () => _set((state) => ({ ...state })),
   }));
 };
 
-export const initUserStore = (user: ClerkUser): UserState => {
+export const initUserStore = (user?: ClerkUser): UserState => {
   return {
     readingSettings: {
       theme: ReadingTheme.SCRIPT,

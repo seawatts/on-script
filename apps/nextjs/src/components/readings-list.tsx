@@ -26,14 +26,12 @@ import {
 } from "@on-script/ui/card";
 import { Text } from "@on-script/ui/typography";
 
-import { useUserStore } from "~/providers/user-store-provider";
 import { createClient } from "~/supabase/client";
 import { formatRelativeTime } from "~/utils/format-date";
 
 export function ReadingList(props: {
   readings: Promise<ReadingQuerySchema[]>;
 }) {
-  const user = useUserStore((store) => store.user);
   const [onlineUsers, setOnlineUsers] = useState<Record<string, number>>({});
   const readingsPromise = use(props.readings);
 
@@ -102,22 +100,22 @@ export function ReadingList(props: {
       readingChannel
         .on("presence", { event: "sync" }, () => {
           const count = Object.keys(readingChannel.presenceState()).length;
+          console.log("sync", { count });
           setOnlineUsers((previous) => ({
             ...previous,
             [reading.id]: count,
           }));
         })
         .on("presence", { event: "join" }, ({ key, newPresences }) => {
-          console.log({ key, newPresences });
+          console.log("join", { key, newPresences });
         })
         .on("presence", { event: "leave" }, ({ key, leftPresences }) => {
-          console.log({ key, leftPresences });
+          console.log("leave", { key, leftPresences });
         })
         .subscribe();
     }
   }, [readings, onlineUsers]);
 
-  console.log("readings", readings);
   return (
     <div className="flex flex-col gap-4">
       <Card>
@@ -162,7 +160,7 @@ export function ReadingList(props: {
                     <Button asChild>
                       <Link
                         href={`/scripts/${reading.scriptId}/reading/${reading.id}/character-selection`}
-                        prefetch={!!user}
+                        // prefetch={!!user}
                       >
                         Join {onlineUsers[reading.id] ?? 0}{" "}
                         {pluralize("reader", onlineUsers[reading.id] ?? 0)}
