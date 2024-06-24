@@ -1,12 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
-
 import type { IScene } from "./types";
 
 export function Scene(props: { scene: IScene }) {
   return (
-    <motion.div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
       {props.scene.elements.map((element, _index) => {
         switch (element.type) {
           // case ElementType.ACTION:
@@ -105,6 +103,6 @@ export function Scene(props: { scene: IScene }) {
           <Text {...textProps}>How long did he testify?</Text>
         </div>
       </div> */}
-    </motion.div>
+    </div>
   );
 }

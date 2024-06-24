@@ -2,19 +2,21 @@
 
 import { useEffect, useState } from "react";
 
+import { useReadingStore } from "~/providers/reading-store-provider";
 import { useUserStore } from "~/providers/user-store-provider";
 import { createClient } from "~/supabase/client";
 
-export function Presence(props: { readingId: string }) {
+export function Presence() {
+  const reading = useReadingStore((store) => store.reading);
   const user = useUserStore((state) => state.user);
   const [_onlineUsers, setOnlineUsers] = useState(0);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !reading) return;
 
     const supabase = createClient();
 
-    const readingChannel = supabase.channel(`presence:${props.readingId}`, {
+    const readingChannel = supabase.channel(`presence:${reading.id}`, {
       config: {
         presence: {
           key: user.id,
@@ -25,20 +27,7 @@ export function Presence(props: { readingId: string }) {
       .on("presence", { event: "sync" }, () => {
         setOnlineUsers(Object.keys(readingChannel.presenceState()).length);
       })
-      // .on("presence", { event: "join" }, () => {
-      //   void setReadingSessionOnline({
-      //     online: true,
-      //     readingId: props.readingId,
-      //     userId: user.id,
-      //   });
-      // })
-      // .on("presence", { event: "leave" }, () => {
-      //   void setReadingSessionOnline({
-      //     online: false,
-      //     readingId: props.readingId,
-      //     userId: user.id,
-      //   });
-      // })
+
       .subscribe((status) => {
         if (status === "SUBSCRIBED") {
           void readingChannel.track({
@@ -48,9 +37,9 @@ export function Presence(props: { readingId: string }) {
         }
       });
 
-    // return () => {
-    // return readingChannel.untrack();
-    // };
-  }, [user, props.readingId]);
+    return () => {
+      void supabase.removeChannel(readingChannel);
+    };
+  }, [user, reading]);
   return <></>;
 }

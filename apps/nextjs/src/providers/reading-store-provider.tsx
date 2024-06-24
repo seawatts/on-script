@@ -7,7 +7,7 @@ import { useStore } from "zustand";
 import type { ReadingQuerySchema } from "@on-script/db/schema";
 
 import type { ReadingStore } from "~/stores/reading";
-import { createReadingStore } from "~/stores/reading";
+import { createReadingStore, initReadingStore } from "~/stores/reading";
 
 export type ReadingStoreApi = ReturnType<typeof createReadingStore>;
 
@@ -26,7 +26,7 @@ export const ReadingStoreProvider = ({
   const storeRef = useRef<ReadingStoreApi>();
 
   if (!storeRef.current) {
-    storeRef.current = createReadingStore({ reading });
+    storeRef.current = createReadingStore(initReadingStore(reading));
   }
 
   useEffect(() => {

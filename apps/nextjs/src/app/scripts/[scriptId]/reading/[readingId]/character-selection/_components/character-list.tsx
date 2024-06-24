@@ -41,6 +41,7 @@ export function CharacterList(props: {
   }, [useCharacterAssignments, props.characterAssignments]);
 
   const supabase = createClient();
+
   useEffect(() => {
     const channel = supabase
       .channel("character_assignment")
@@ -54,9 +55,7 @@ export function CharacterList(props: {
 
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         async (payload) => {
-          console.log(payload.eventType);
           if (payload.eventType === "DELETE") {
-            console.log("DELETE", payload);
             setAssignments((previousItems) =>
               previousItems.filter(
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
@@ -142,6 +141,27 @@ export function CharacterList(props: {
                 if (assignedToOtherUser) return;
 
                 const action = assignedToCurrentUser ? "deselect" : "select";
+
+                setAssignments((previousItems) => {
+                  if (action === "select") {
+                    return [
+                      ...previousItems,
+                      {
+                        characterId: character.id,
+                        createdAt: new Date(),
+                        id: "optimistic",
+                        readingId: props.readingId,
+                        updatedAt: new Date(),
+                        user: {} as UserSelectSchema,
+                        userId: props.userId,
+                      },
+                    ];
+                  }
+
+                  return previousItems.filter(
+                    (item) => item.characterId !== character.id,
+                  );
+                });
 
                 await upsertCharacterAssignments({
                   action,

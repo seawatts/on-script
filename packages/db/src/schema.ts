@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
   boolean,
   integer,
@@ -28,7 +28,7 @@ export const Script = pgTable("script", {
   updatedAt: timestamp("updatedAt", {
     mode: "date",
     withTimezone: true,
-  }).$onUpdateFn(() => sql`now()`),
+  }).$onUpdateFn(() => new Date()),
   writtenBy: text("writtenBy").notNull(),
 });
 
@@ -65,7 +65,7 @@ export const Character = pgTable("character", {
   updatedAt: timestamp("updatedAt", {
     mode: "date",
     withTimezone: true,
-  }).$onUpdateFn(() => sql`now()`),
+  }).$onUpdateFn(() => new Date()),
 });
 
 export type CharacterInsertSchema = typeof Character.$inferInsert;
@@ -102,7 +102,7 @@ export const Element = pgTable("element", {
     }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   id: varchar("id", { length: 128 })
-    .$defaultFn(() => createId({ prefix: "e" }))
+    .$defaultFn(() => createId({ prefix: "el" }))
     .notNull()
     .primaryKey(),
   index: integer("index").notNull(),
@@ -119,7 +119,7 @@ export const Element = pgTable("element", {
   updatedAt: timestamp("updatedAt", {
     mode: "date",
     withTimezone: true,
-  }).$onUpdateFn(() => sql`now()`),
+  }).$onUpdateFn(() => new Date()),
 });
 
 export type ElementInsertSchema = typeof Element.$inferInsert;
@@ -158,7 +158,7 @@ export const User = pgTable("user", {
   updatedAt: timestamp("updatedAt", {
     mode: "date",
     withTimezone: true,
-  }).$onUpdateFn(() => sql`now()`),
+  }).$onUpdateFn(() => new Date()),
 });
 
 export type UserInsertSchema = typeof User.$inferInsert;
@@ -198,7 +198,7 @@ export const Reading = pgTable("reading", {
   updatedAt: timestamp("updatedAt", {
     mode: "date",
     withTimezone: true,
-  }).$onUpdateFn(() => sql`now()`),
+  }).$onUpdateFn(() => new Date()),
 });
 
 export type ReadingInsertSchema = typeof Reading.$inferInsert;
@@ -243,7 +243,7 @@ export const ReadingSession = pgTable("reading_session", {
   updatedAt: timestamp("updatedAt", {
     mode: "date",
     withTimezone: true,
-  }).$onUpdateFn(() => sql`now()`),
+  }).$onUpdateFn(() => new Date()),
   userId: varchar("userId").references(() => User.id, { onDelete: "cascade" }),
 });
 
@@ -279,7 +279,7 @@ export const CharacterAssignment = pgTable("character_assignment", {
   updatedAt: timestamp("updatedAt", {
     mode: "date",
     withTimezone: true,
-  }).$onUpdateFn(() => sql`now()`),
+  }).$onUpdateFn(() => new Date()),
   userId: varchar("userId")
     .notNull()
     .references(() => User.id, { onDelete: "cascade" }),

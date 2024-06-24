@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-import { and, eq } from "@on-script/db";
-import { Reading, ReadingSession } from "@on-script/db/schema";
+import { eq } from "@on-script/db";
+import { Reading } from "@on-script/db/schema";
 
 import { authenticatedAction } from "~/safe-action";
 
@@ -28,29 +28,4 @@ export const selectCurrentElement = authenticatedAction
       .execute();
 
     revalidatePath(`/scripts/${scriptId}/reading/${readingId}`);
-  });
-
-export const setReadingSessionOnline = authenticatedAction
-  .createServerAction()
-  .input(
-    z.object({
-      online: z.boolean(),
-      readingId: z.string(),
-      userId: z.string(),
-    }),
-  )
-  .handler(async ({ ctx, input }) => {
-    const { readingId, userId } = input;
-    await ctx.db
-      .update(ReadingSession)
-      .set({
-        online: input.online,
-      })
-      .where(
-        and(
-          eq(ReadingSession.readingId, readingId),
-          eq(ReadingSession.userId, userId),
-        ),
-      )
-      .execute();
   });

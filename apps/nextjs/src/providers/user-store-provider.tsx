@@ -2,11 +2,10 @@
 
 import type { PropsWithChildren } from "react";
 import { createContext, useContext, useEffect, useRef } from "react";
-import { useUser } from "@clerk/nextjs";
 import { useStore } from "zustand";
 
-import type { UserStore } from "~/stores/user";
-import { createUserStore } from "~/stores/user";
+import type { ClerkUser, UserStore } from "~/stores/user";
+import { createUserStore, initUserStore } from "~/stores/user";
 
 export type UserStoreApi = ReturnType<typeof createUserStore>;
 
@@ -14,16 +13,26 @@ export const UserStoreContext = createContext<UserStoreApi | undefined>(
   undefined,
 );
 
-export const UserStoreProvider = ({ children }: PropsWithChildren) => {
+export interface UserStoreProviderProps {
+  user?: ClerkUser;
+}
+
+export const UserStoreProvider = ({
+  children,
+  user,
+}: PropsWithChildren<UserStoreProviderProps>) => {
   const storeRef = useRef<UserStoreApi>();
-  const user = useUser();
 
   if (!storeRef.current) {
-    storeRef.current = createUserStore();
+    storeRef.current = createUserStore(initUserStore(user));
   }
 
   useEffect(() => {
-    storeRef.current?.setState({ user: user.user });
+    if (user && storeRef.current?.getState().user?.id === user.id) {
+      return;
+    }
+
+    storeRef.current?.setState({ user });
   }, [user]);
 
   return (

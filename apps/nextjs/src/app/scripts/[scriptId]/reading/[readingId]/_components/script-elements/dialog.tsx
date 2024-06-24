@@ -1,25 +1,29 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useServerAction } from "zsa-react";
 
 import type { ElementSelectSchema } from "@on-script/db/schema";
 import { cn } from "@on-script/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@on-script/ui/avatar";
 import { Text } from "@on-script/ui/typography";
 
-import { Theme, useScriptContext } from "./script-context";
+import { useReadingStore } from "~/providers/reading-store-provider";
+import { useUserStore } from "~/providers/user-store-provider";
+import { ReadingTheme } from "~/stores/user";
+import { selectCurrentElement } from "../../actions";
 
 type ThemeComponent = (element: ElementSelectSchema) => JSX.Element;
-type themeComponents = Record<Theme, Record<string, ThemeComponent>>;
+type themeComponents = Record<ReadingTheme, Record<string, ThemeComponent>>;
 
 const themeComponents = {
-  [Theme.PLAYFUL]: {
+  [ReadingTheme.PLAYFUL]: {
     Character: (element) => (
       <Text className="font-semibold">{composeCharacter(element)}</Text>
     ),
     Dialog: (element) => {
-      const { settings, selectedElement } = useScriptContext();
-
+      const selectedElement = useReadingStore((store) => store.selectedElement);
+      const readingSettings = useUserStore((store) => store.readingSettings);
       const dialogWidth = "w-10/12 lg:w-7/12";
 
       return (
@@ -29,8 +33,8 @@ const themeComponents = {
           })}
         >
           <div className={cn("flex flex-col gap-4", dialogWidth)}>
-            {themeComponents[settings.theme].Character(element)}
-            {themeComponents[settings.theme].Text(element)}
+            {themeComponents[readingSettings.theme].Character(element)}
+            {themeComponents[readingSettings.theme].Text(element)}
           </div>
           <Avatar className="place-self-end">
             <AvatarImage src="" />
@@ -41,13 +45,15 @@ const themeComponents = {
     },
     Text: (element) => <Text>{element.text}</Text>,
   },
-  [Theme.SCRIPT]: {
+  [ReadingTheme.SCRIPT]: {
     Character: (element) => {
-      const { settings, selectedElement } = useScriptContext();
+      const selectedElement = useReadingStore((store) => store.selectedElement);
+
+      const readingSettings = useUserStore((store) => store.readingSettings);
 
       return (
         <Text
-          {...settings.typography}
+          {...readingSettings.typography}
           className={cn("text-center transition-all", {
             "text-muted": (selectedElement?.index ?? 0) > element.index,
           })}
@@ -57,8 +63,13 @@ const themeComponents = {
       );
     },
     Dialog: (element) => {
-      const { settings, selectedElement, setSelectedElement } =
-        useScriptContext();
+      const readingSettings = useUserStore((store) => store.readingSettings);
+      const reading = useReadingStore((store) => store.reading);
+      const selectedElement = useReadingStore((store) => store.selectedElement);
+      const { execute } = useServerAction(selectCurrentElement);
+      const setCurrentElementId = useReadingStore(
+        (store) => store.setCurrentElementId,
+      );
 
       const dialogWidth = "w-10/12 lg:w-7/12";
       const dialogRef = useRef<HTMLDivElement>(null);
@@ -83,21 +94,33 @@ const themeComponents = {
                 selectedElement?.index === element.index,
             },
           )}
-          onClick={() => setSelectedElement(element)}
+          onClick={async () => {
+            if (!reading) return;
+
+            setCurrentElementId(element.id);
+
+            await execute({
+              elementId: element.id,
+              readingId: reading.id,
+              scriptId: reading.scriptId,
+            });
+          }}
         >
           <div className={cn("flex flex-col", dialogWidth)}>
             {/* {themeComponents[settings.theme].Character(element)} */}
-            {themeComponents[settings.theme].Text(element)}
+            {themeComponents[readingSettings.theme].Text(element)}
           </div>
         </div>
       );
     },
     Text: (element) => {
-      const { settings, selectedElement } = useScriptContext();
+      const readingSettings = useUserStore((store) => store.readingSettings);
+
+      const selectedElement = useReadingStore((store) => store.selectedElement);
 
       return (
         <Text
-          {...settings.typography}
+          {...readingSettings.typography}
           className={cn("transition-all", {
             "text-muted": (selectedElement?.index ?? 0) > element.index,
           })}
@@ -110,9 +133,9 @@ const themeComponents = {
 } as const satisfies themeComponents;
 
 export function Dialog(props: { element: ElementSelectSchema }) {
-  const { settings } = useScriptContext();
+  const readingSettings = useUserStore((store) => store.readingSettings);
 
-  return themeComponents[settings.theme].Dialog(props.element);
+  return themeComponents[readingSettings.theme].Dialog(props.element);
 }
 
 function composeCharacter(element: ElementSelectSchema) {

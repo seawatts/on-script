@@ -5,12 +5,17 @@ import { Button } from "@on-script/ui/button";
 import { useHideOnScroll } from "@on-script/ui/hooks/use-hide-on-scroll";
 import { Icons } from "@on-script/ui/icons";
 
-import { useScriptContext } from "~/app/scripts/[scriptId]/reading/[readingId]/_components/script-elements/script-context";
+import { useReadingStore } from "~/providers/reading-store-provider";
 import { DropdownMenuDemo } from "./nav-menu";
 import { Search } from "./search";
 
 export function OmniBar() {
-  const { setSelectedElement, selectedElement, elements } = useScriptContext();
+  const selectedElement = useReadingStore((store) => store.selectedElement);
+  const setCurrentElementId = useReadingStore(
+    (store) => store.setCurrentElementId,
+  );
+  const elements = useReadingStore((store) => store.reading?.script.elements);
+
   const { hidden } = useHideOnScroll({
     scrollHeight: 100,
     scrollUpHeight: 100,
@@ -69,7 +74,16 @@ export function OmniBar() {
           variant="ghost"
           onClick={() => {
             const currentIndex = selectedElement?.index ?? 0;
-            setSelectedElement(elements[currentIndex - 1]);
+            if (currentIndex > 0 || !elements) {
+              return;
+            }
+
+            const previousElement = elements[currentIndex - 1];
+            if (!previousElement) {
+              return;
+            }
+
+            setCurrentElementId(previousElement.id);
           }}
         >
           <Icons.ChevronLeft size="lg" className={"stroke-1"} />
@@ -79,7 +93,7 @@ export function OmniBar() {
           className="rounded-full text-zinc-100 hover:bg-gray-600 hover:text-zinc-100"
           size="icon"
           variant="ghost"
-          onClick={() => setSelectedElement(undefined)}
+          // onClick={() => setCurrentElementId(undefined)}
         >
           <Icons.CircleDot size="lg" className={"stroke-1"} />
           <span className="sr-only">Edit</span>
@@ -90,7 +104,16 @@ export function OmniBar() {
           variant="ghost"
           onClick={() => {
             const currentIndex = selectedElement?.index ?? 0;
-            setSelectedElement(elements[currentIndex + 1]);
+            if (currentIndex < (elements?.length ?? 0) || !elements) {
+              return;
+            }
+
+            const nextElement = elements[currentIndex + 1];
+            if (!nextElement) {
+              return;
+            }
+
+            setCurrentElementId(nextElement.id);
           }}
         >
           <Icons.ChevronRight size="lg" className={"stroke-1"} />
