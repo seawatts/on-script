@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useReadingStore } from "~/providers/reading-store-provider";
 import { useUserStore } from "~/providers/user-store-provider";
@@ -8,8 +8,8 @@ import { createClient } from "~/supabase/client";
 
 export function Presence() {
   const reading = useReadingStore((store) => store.reading);
+  const setOnlineUsers = useReadingStore((store) => store.setOnlineUsers);
   const user = useUserStore((state) => state.user);
-  const [_onlineUsers, setOnlineUsers] = useState(0);
 
   useEffect(() => {
     if (!user || !reading) return;
@@ -25,7 +25,10 @@ export function Presence() {
     });
     readingChannel
       .on("presence", { event: "sync" }, () => {
-        setOnlineUsers(Object.keys(readingChannel.presenceState()).length);
+        const onlineUsers = new Set(
+          Object.keys(readingChannel.presenceState()),
+        );
+        setOnlineUsers(onlineUsers);
       })
 
       .subscribe((status) => {
@@ -40,6 +43,6 @@ export function Presence() {
     return () => {
       void supabase.removeChannel(readingChannel);
     };
-  }, [user, reading]);
+  }, [user, reading, setOnlineUsers]);
   return <></>;
 }

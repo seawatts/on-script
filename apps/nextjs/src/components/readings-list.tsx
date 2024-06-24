@@ -1,11 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { first } from "lodash-es";
 import pluralize from "pluralize";
 
-import type { ReadingQuerySchema } from "@on-script/db/schema";
+import type {
+  ReadingQuerySchema,
+  ScriptSelectSchema,
+  UserSelectSchema,
+} from "@on-script/db/schema";
 import {
   Avatar,
   AvatarFallback,
@@ -22,15 +26,69 @@ import {
 } from "@on-script/ui/card";
 import { Text } from "@on-script/ui/typography";
 
+import { useUserStore } from "~/providers/user-store-provider";
 import { createClient } from "~/supabase/client";
-import { useSubscribeToReadings } from "~/supabase/subscriptions";
 import { formatRelativeTime } from "~/utils/format-date";
 
 export function ReadingList(props: {
   readings: Promise<ReadingQuerySchema[]>;
 }) {
-  const readings = useSubscribeToReadings({ readings: props.readings });
+  const user = useUserStore((store) => store.user);
   const [onlineUsers, setOnlineUsers] = useState<Record<string, number>>({});
+  const readingsPromise = use(props.readings);
+
+  const [readings, setReadings] =
+    useState<ReadingQuerySchema[]>(readingsPromise);
+
+  useEffect(() => {
+    const supabase = createClient();
+    const channel = supabase
+      .channel("reading")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "reading",
+        },
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        async (payload) => {
+          if (payload.eventType === "DELETE") {
+            setReadings((previousItems) =>
+              previousItems.filter((item) => item.id !== payload.old.id),
+            );
+          } else {
+            const [createdBy, script] = await Promise.all([
+              supabase
+                .from("user")
+                .select("*")
+                .eq("id", payload.new.createdById)
+                .single(),
+              supabase
+                .from("script")
+                .select("*")
+                .eq("id", payload.new.scriptId)
+                .single(),
+            ]);
+            console.log({ createdBy, script });
+
+            setReadings((previousItems) => [
+              ...previousItems,
+              {
+                ...payload.new,
+                createdBy: createdBy.data as UserSelectSchema,
+                script: script.data as ScriptSelectSchema,
+              } as ReadingQuerySchema,
+            ]);
+          }
+        },
+      )
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, []);
 
   useEffect(() => {
     const supabase = createClient();
@@ -49,10 +107,17 @@ export function ReadingList(props: {
             [reading.id]: count,
           }));
         })
+        .on("presence", { event: "join" }, ({ key, newPresences }) => {
+          console.log({ key, newPresences });
+        })
+        .on("presence", { event: "leave" }, ({ key, leftPresences }) => {
+          console.log({ key, leftPresences });
+        })
         .subscribe();
     }
   }, [readings, onlineUsers]);
 
+  console.log("readings", readings);
   return (
     <div className="flex flex-col gap-4">
       <Card>
@@ -97,6 +162,7 @@ export function ReadingList(props: {
                     <Button asChild>
                       <Link
                         href={`/scripts/${reading.scriptId}/reading/${reading.id}/character-selection`}
+                        prefetch={!!user}
                       >
                         Join {onlineUsers[reading.id] ?? 0}{" "}
                         {pluralize("reader", onlineUsers[reading.id] ?? 0)}

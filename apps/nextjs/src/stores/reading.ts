@@ -8,16 +8,20 @@ import type {
 export interface ReadingState {
   reading?: ReadingQuerySchema;
   selectedElement?: ElementSelectSchema;
+  onlineUsers?: Set<string>;
 }
 
 export interface ReadingActions {
   setCurrentElementId: (elementId: string) => void;
+  setOnlineUsers: (onlineUsers: Set<string>) => void;
 }
 
 export type ReadingStore = ReadingState & ReadingActions;
 
 export const defaultInitState: ReadingState = {
+  onlineUsers: new Set(),
   reading: undefined,
+  selectedElement: undefined,
 };
 
 export const createReadingStore = (
@@ -35,11 +39,16 @@ export const createReadingStore = (
           (element) => element.id === elementId,
         ),
       })),
+    setOnlineUsers: (onlineUsers: Set<string>) =>
+      set(() => ({
+        onlineUsers,
+      })),
   }));
 };
 
 export const initReadingStore = (reading: ReadingQuerySchema): ReadingState => {
   return {
+    onlineUsers: new Set(),
     reading,
     selectedElement: reading.script.elements?.find(
       (element) => element.id === reading.currentElementId,
