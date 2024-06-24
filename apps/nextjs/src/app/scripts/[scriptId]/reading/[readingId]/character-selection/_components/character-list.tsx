@@ -44,7 +44,7 @@ export function CharacterList(props: {
 
   useEffect(() => {
     const channel = supabase
-      .channel("character_assignment")
+      .channel(`characterAssignment:${props.readingId}`)
       .on(
         "postgres_changes",
         {
@@ -89,7 +89,7 @@ export function CharacterList(props: {
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [setAssignments, supabase]);
+  }, [props.readingId, setAssignments, supabase]);
 
   const currentUserAssignments = new Set(
     assignments
