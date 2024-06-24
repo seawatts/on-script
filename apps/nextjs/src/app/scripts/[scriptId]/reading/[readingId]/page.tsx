@@ -22,11 +22,11 @@ export default async function Page(props: {
 
   return (
     <div className="flex min-h-screen flex-col py-4 sm:gap-4">
+      <ClerkProvider>
+        <Presence readingId={reading.id} />
+      </ClerkProvider>
       <main className="container mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center gap-4">
         <ReadingStoreProvider reading={reading}>
-          <ClerkProvider>
-            <Presence />
-          </ClerkProvider>
           <Title />
           <Separator />
           <ElementsList />

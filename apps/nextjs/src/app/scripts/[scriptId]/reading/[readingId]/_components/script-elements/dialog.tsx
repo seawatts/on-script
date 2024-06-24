@@ -48,7 +48,6 @@ const themeComponents = {
   [ReadingTheme.SCRIPT]: {
     Character: (element) => {
       const selectedElement = useReadingStore((store) => store.selectedElement);
-
       const readingSettings = useUserStore((store) => store.readingSettings);
 
       return (
@@ -115,7 +114,6 @@ const themeComponents = {
     },
     Text: (element) => {
       const readingSettings = useUserStore((store) => store.readingSettings);
-
       const selectedElement = useReadingStore((store) => store.selectedElement);
 
       return (

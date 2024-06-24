@@ -14,10 +14,11 @@ export function ElementsList() {
     (store) => store.setCurrentElementId,
   );
 
+  const supabase = createClient();
+
   useEffect(() => {
     if (!reading) return;
 
-    const supabase = createClient();
     const channel = supabase
       .channel(`currentElement:${reading.id}`)
       .on(
@@ -36,7 +37,7 @@ export function ElementsList() {
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [reading, setCurrentElementId]);
+  }, [reading, supabase, setCurrentElementId]);
 
   return (
     <div className="flex flex-col gap-6">

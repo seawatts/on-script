@@ -37,9 +37,9 @@ export function ReadingList(props: {
 
   const [readings, setReadings] =
     useState<ReadingQuerySchema[]>(readingsPromise);
+  const supabase = createClient();
 
   useEffect(() => {
-    const supabase = createClient();
     const channel = supabase
       .channel("reading")
       .on(
@@ -68,16 +68,20 @@ export function ReadingList(props: {
                 .eq("id", payload.new.scriptId)
                 .single(),
             ]);
-            console.log({ createdBy, script });
 
-            setReadings((previousItems) => [
-              ...previousItems,
-              {
-                ...payload.new,
-                createdBy: createdBy.data as UserSelectSchema,
-                script: script.data as ScriptSelectSchema,
-              } as ReadingQuerySchema,
-            ]);
+            setReadings((previousItems) => {
+              const updatedReadings = previousItems.map((item) => {
+                if (item.id === payload.new.id) {
+                  return {
+                    ...payload.new,
+                    createdBy: createdBy.data as UserSelectSchema,
+                    script: script.data as ScriptSelectSchema,
+                  } as ReadingQuerySchema;
+                }
+                return item;
+              });
+              return updatedReadings;
+            });
           }
         },
       )
@@ -86,7 +90,7 @@ export function ReadingList(props: {
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, []);
+  }, [supabase]);
 
   useEffect(() => {
     const supabase = createClient();
@@ -100,18 +104,13 @@ export function ReadingList(props: {
       readingChannel
         .on("presence", { event: "sync" }, () => {
           const count = Object.keys(readingChannel.presenceState()).length;
-          console.log("sync", { count });
           setOnlineUsers((previous) => ({
             ...previous,
             [reading.id]: count,
           }));
         })
-        .on("presence", { event: "join" }, ({ key, newPresences }) => {
-          console.log("join", { key, newPresences });
-        })
-        .on("presence", { event: "leave" }, ({ key, leftPresences }) => {
-          console.log("leave", { key, leftPresences });
-        })
+        // .on("presence", { event: "join" }, ({ key, newPresences }) => {})
+        // .on("presence", { event: "leave" }, ({ key, leftPresences }) => {})
         .subscribe();
     }
   }, [readings, onlineUsers]);

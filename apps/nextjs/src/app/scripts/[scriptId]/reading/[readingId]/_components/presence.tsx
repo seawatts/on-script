@@ -6,37 +6,29 @@ import { useUser } from "@clerk/nextjs";
 import { useReadingStore } from "~/providers/reading-store-provider";
 import { createClient } from "~/supabase/client";
 
-export function Presence() {
-  const reading = useReadingStore((store) => store.reading);
+export function Presence(props: { readingId: string }) {
   const setOnlineUsers = useReadingStore((store) => store.setOnlineUsers);
-  // const user = useUerStore((state) => state.user);
   const { user } = useUser();
 
   const supabase = createClient();
 
   useEffect(() => {
-    if (!user || !reading) return;
+    if (!user || !props.readingId) return;
 
-    const readingChannel = supabase.channel(`presence:${reading.id}`, {
-      config: {
-        presence: {
-          key: user.id,
+    const readingChannel = supabase
+      .channel(`presence:${props.readingId}`, {
+        config: {
+          presence: {
+            key: user.id,
+          },
         },
-      },
-    });
-    readingChannel
-      .on("presence", { event: "sync" }, () => {
-        const onlineUsers = new Set(
-          Object.keys(readingChannel.presenceState()),
-        );
-        console.log("presence sync", onlineUsers);
-        setOnlineUsers(onlineUsers);
       })
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      .subscribe(async (status) => {
-        if (status === "SUBSCRIBED") {
-          console.log("readingChannel.track", user.id);
-          await readingChannel.track({
+      .subscribe((status) => {
+        if (
+          status === "SUBSCRIBED" &&
+          !readingChannel.presenceState()[user.id]
+        ) {
+          void readingChannel.track({
             onlineAt: new Date().toISOString(),
             userId: user.id,
           });
@@ -46,6 +38,6 @@ export function Presence() {
     return () => {
       void supabase.removeChannel(readingChannel);
     };
-  }, [user, reading, setOnlineUsers, supabase]);
+  }, [user, props.readingId, setOnlineUsers, supabase]);
   return <></>;
 }
