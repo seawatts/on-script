@@ -23,6 +23,14 @@ export function Presence(props: { readingId: string }) {
           },
         },
       })
+      .on("presence", { event: "sync" }, () => {
+        const onlineUsers = new Set(
+          Object.keys(readingChannel.presenceState()),
+        );
+
+        console.log(onlineUsers);
+        setOnlineUsers(onlineUsers);
+      })
       .subscribe((status) => {
         if (
           status === "SUBSCRIBED" &&

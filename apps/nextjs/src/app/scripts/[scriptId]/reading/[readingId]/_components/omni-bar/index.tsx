@@ -10,6 +10,7 @@ import { DropdownMenuDemo } from "./nav-menu";
 import { Search } from "./search";
 
 export function OmniBar() {
+  const onlineUsers = useReadingStore((store) => store.onlineUsers);
   const selectedElement = useReadingStore((store) => store.selectedElement);
   const setCurrentElementId = useReadingStore(
     (store) => store.setCurrentElementId,
@@ -52,7 +53,7 @@ export function OmniBar() {
               width="32"
             /> */}
             <span className="absolute left-0 top-0 flex h-full w-full items-center justify-center text-xs font-bold text-white">
-              9+
+              {onlineUsers?.size}
             </span>
           </div>
           <span className="sr-only">Edit</span>

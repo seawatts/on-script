@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useUser } from "@clerk/nextjs";
 import { useServerAction } from "zsa-react";
 
 import type { ElementSelectSchema } from "@on-script/db/schema";
@@ -47,21 +48,40 @@ const themeComponents = {
   },
   [ReadingTheme.SCRIPT]: {
     Character: (element) => {
+      const { user } = useUser();
+      const reading = useReadingStore((store) => store.reading);
       const selectedElement = useReadingStore((store) => store.selectedElement);
       const readingSettings = useUserStore((store) => store.readingSettings);
+      const character = reading?.script.characters?.find(
+        (character) => character.id === element.characterId,
+      );
+      const isCurrentUser = reading?.characterAssignments.find(
+        (assignment) =>
+          assignment.characterId === element.characterId &&
+          assignment.userId === user?.id,
+      );
 
+      const isPastElement = (selectedElement?.index ?? 0) > element.index;
+      const isCurrentElement = selectedElement?.index === element.index;
       return (
         <Text
           {...readingSettings.typography}
-          className={cn("text-center transition-all", {
-            "text-muted": (selectedElement?.index ?? 0) > element.index,
-          })}
+          className={cn(
+            "mx-auto flex max-w-fit text-center uppercase transition-all",
+            {
+              "border-b-2 border-muted": isCurrentUser && isPastElement,
+              "border-b-2 border-primary": isCurrentUser && !isPastElement,
+              "text-muted": isPastElement,
+            },
+          )}
         >
-          {composeCharacter(element)}
+          {/* {composeCharacter(element)} */}
+          {character?.name}
         </Text>
       );
     },
     Dialog: (element) => {
+      const { user } = useUser();
       const readingSettings = useUserStore((store) => store.readingSettings);
       const reading = useReadingStore((store) => store.reading);
       const selectedElement = useReadingStore((store) => store.selectedElement);
@@ -83,18 +103,34 @@ const themeComponents = {
         }
       }, [selectedElement?.index, element.index, dialogRef]);
 
+      const isCurrentUser = reading?.characterAssignments.find(
+        (assignment) =>
+          assignment.characterId === element.characterId &&
+          assignment.userId === user?.id,
+      );
+
+      const isOtherUser = reading?.characterAssignments.find(
+        (assignment) =>
+          assignment.characterId === element.characterId &&
+          assignment.userId !== user?.id,
+      );
+
+      const isPastElement = (selectedElement?.index ?? 0) > element.index;
+      const isCurrentElement = selectedElement?.index === element.index;
+
       return (
         <div
           ref={dialogRef}
-          className={cn(
-            "flex cursor-pointer flex-col items-center border py-2 transition-all",
-            {
-              "rounded border-primary":
-                selectedElement?.index === element.index,
-            },
-          )}
+          className={cn("flex flex-col items-center py-2 transition-all", {
+            // "border-muted": isPastElement,
+            // "border-b-blue-600": isOtherUser && !isPastElement,
+            // "border-primary": isCurrentUser && !isPastElement,
+            // "border-b-4 border-primary":
+            // "ring ring-primary ring-offset-8 ring-offset-background":
+            // isCurrentElement,
+          })}
           onClick={async () => {
-            if (!reading) return;
+            if (!reading || selectedElement?.id === element.id) return;
 
             setCurrentElementId(element.id);
 
@@ -105,8 +141,8 @@ const themeComponents = {
             });
           }}
         >
-          <div className={cn("flex flex-col", dialogWidth)}>
-            {/* {themeComponents[settings.theme].Character(element)} */}
+          <div className={cn("flex flex-col gap-2", dialogWidth)}>
+            {themeComponents[readingSettings.theme].Character(element)}
             {themeComponents[readingSettings.theme].Text(element)}
           </div>
         </div>

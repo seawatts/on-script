@@ -205,6 +205,7 @@ export type ReadingInsertSchema = typeof Reading.$inferInsert;
 export type ReadingSelectSchema = typeof Reading.$inferSelect;
 export type ReadingQuerySchema = ReadingSelectSchema & {
   createdBy: UserSelectSchema;
+  characterAssignments: CharacterAssignmentSelectSchema[];
   script: ScriptSelectSchema & {
     characters?: CharacterSelectSchema[];
     elements?: ElementSelectSchema[];
