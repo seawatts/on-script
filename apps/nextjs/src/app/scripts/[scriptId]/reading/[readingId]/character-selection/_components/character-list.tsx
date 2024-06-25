@@ -11,6 +11,12 @@ import type {
   UserSelectSchema,
 } from "@on-script/db/schema";
 import { cn } from "@on-script/ui";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  getInitials,
+} from "@on-script/ui/avatar";
 import { Badge } from "@on-script/ui/badge";
 import { Button } from "@on-script/ui/button";
 import { Icons } from "@on-script/ui/icons";
@@ -127,6 +133,11 @@ export function CharacterList(props: {
             readBy = "You";
           }
 
+          const userInitials = getInitials({
+            firstName: userAssignment?.user.firstName,
+            lastName: userAssignment?.user.lastName,
+          });
+
           return (
             <li
               key={character.id}
@@ -192,9 +203,17 @@ export function CharacterList(props: {
                     )}
                   </Badge>
                 </div>
-                <Text variant={"muted"} size="sm">
-                  Read By: {readBy}
-                </Text>
+                <div className="flex gap-2">
+                  <Text variant={"muted"} size="sm">
+                    Read By: {readBy}
+                  </Text>
+                  {userAssignment && (
+                    <Avatar>
+                      <AvatarImage src={userAssignment.user.avatarUrl ?? ""} />
+                      <AvatarFallback>{userInitials}</AvatarFallback>
+                    </Avatar>
+                  )}
+                </div>
               </div>
             </li>
           );
