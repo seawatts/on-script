@@ -151,8 +151,8 @@ export function ReadingList(props: {
                           {/* {reading.createdBy.firstName}{" "} */}
                           {/* {reading.createdBy.lastName} */}
                         </Text>
-                        <Text variant={"muted"}>
-                          {formatRelativeTime(reading.createdAt)}
+                        <Text variant={"muted"} size="sm">
+                          Started {formatRelativeTime(reading.createdAt)}
                         </Text>
                       </div>
                     </div>

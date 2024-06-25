@@ -160,7 +160,7 @@ export function CharacterList(props: {
                       {
                         characterId: character.id,
                         createdAt: new Date(),
-                        id: "optimistic",
+                        id: `optimistic-${character.id}-${props.userId}`,
                         readingId: props.readingId,
                         updatedAt: new Date(),
                         user: {} as UserSelectSchema,

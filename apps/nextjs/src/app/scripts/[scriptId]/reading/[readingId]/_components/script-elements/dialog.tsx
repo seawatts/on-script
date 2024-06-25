@@ -69,11 +69,15 @@ const themeComponents = {
           assignment.userId === user?.id,
       );
 
+      const userAssignment = characterAssignments?.find(
+        (assignment) => assignment.characterId === element.characterId,
+      );
+
       const isPastElement = (selectedElement?.index ?? 0) > element.index;
 
       const userInitials = getInitials({
-        firstName: currentUserAssignment?.user.firstName,
-        lastName: currentUserAssignment?.user.lastName,
+        firstName: userAssignment?.user.firstName,
+        lastName: userAssignment?.user.lastName,
       });
 
       return (
@@ -95,13 +99,13 @@ const themeComponents = {
             {character?.name}
           </Text>
           <div className="absolute -top-1 right-0">
-            {currentUserAssignment && (
+            {userAssignment && (
               <Avatar
                 className={cn({
                   "opacity-15": isPastElement,
                 })}
               >
-                <AvatarImage src={currentUserAssignment.user.avatarUrl ?? ""} />
+                <AvatarImage src={userAssignment.user.avatarUrl ?? ""} />
                 <AvatarFallback>{userInitials}</AvatarFallback>
               </Avatar>
             )}
