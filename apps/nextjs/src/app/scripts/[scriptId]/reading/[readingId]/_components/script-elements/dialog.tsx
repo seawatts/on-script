@@ -56,18 +56,20 @@ const themeComponents = {
       const { user } = useUser();
       const reading = useReadingStore((store) => store.reading);
       const selectedElement = useReadingStore((store) => store.selectedElement);
+      const characterAssignments = useReadingStore(
+        (store) => store.characterAssignments,
+      );
       const readingSettings = useUserStore((store) => store.readingSettings);
       const character = reading?.script.characters?.find(
         (character) => character.id === element.characterId,
       );
-      const currentUserAssignment = reading?.characterAssignments.find(
+      const currentUserAssignment = characterAssignments?.find(
         (assignment) =>
           assignment.characterId === element.characterId &&
           assignment.userId === user?.id,
       );
 
       const isPastElement = (selectedElement?.index ?? 0) > element.index;
-      const isCurrentElement = selectedElement?.index === element.index;
 
       const userInitials = getInitials({
         firstName: currentUserAssignment?.user.firstName,
@@ -108,7 +110,6 @@ const themeComponents = {
       );
     },
     Dialog: (element) => {
-      const { user } = useUser();
       const readingSettings = useUserStore((store) => store.readingSettings);
       const reading = useReadingStore((store) => store.reading);
       const selectedElement = useReadingStore((store) => store.selectedElement);
@@ -130,32 +131,10 @@ const themeComponents = {
         }
       }, [selectedElement?.index, element.index, dialogRef]);
 
-      const isCurrentUser = reading?.characterAssignments.find(
-        (assignment) =>
-          assignment.characterId === element.characterId &&
-          assignment.userId === user?.id,
-      );
-
-      const isOtherUser = reading?.characterAssignments.find(
-        (assignment) =>
-          assignment.characterId === element.characterId &&
-          assignment.userId !== user?.id,
-      );
-
-      const isPastElement = (selectedElement?.index ?? 0) > element.index;
-      const isCurrentElement = selectedElement?.index === element.index;
-
       return (
         <div
           ref={dialogRef}
-          className={cn("flex flex-col items-center py-2 transition-all", {
-            // "border-muted": isPastElement,
-            // "border-b-blue-600": isOtherUser && !isPastElement,
-            // "border-primary": isCurrentUser && !isPastElement,
-            // "border-b-4 border-primary":
-            // "ring ring-primary ring-offset-8 ring-offset-background":
-            // isCurrentElement,
-          })}
+          className={"flex flex-col items-center py-2 transition-all"}
           onClick={async () => {
             if (!reading || selectedElement?.id === element.id) return;
 
