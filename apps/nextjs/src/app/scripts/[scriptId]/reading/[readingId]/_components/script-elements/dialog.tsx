@@ -1,13 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 import { useServerAction } from "zsa-react";
 
 import type { ElementSelectSchema } from "@on-script/db/schema";
 import { cn } from "@on-script/ui";
-import { Avatar, AvatarFallback, AvatarImage } from "@on-script/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  getInitials,
+} from "@on-script/ui/avatar";
 import { Text } from "@on-script/ui/typography";
 
 import { useReadingStore } from "~/providers/reading-store-provider";
@@ -56,7 +60,7 @@ const themeComponents = {
       const character = reading?.script.characters?.find(
         (character) => character.id === element.characterId,
       );
-      const isCurrentUser = reading?.characterAssignments.find(
+      const currentUserAssignment = reading?.characterAssignments.find(
         (assignment) =>
           assignment.characterId === element.characterId &&
           assignment.userId === user?.id,
@@ -64,6 +68,12 @@ const themeComponents = {
 
       const isPastElement = (selectedElement?.index ?? 0) > element.index;
       const isCurrentElement = selectedElement?.index === element.index;
+
+      const userInitials = getInitials({
+        firstName: currentUserAssignment?.user.firstName,
+        lastName: currentUserAssignment?.user.lastName,
+      });
+
       return (
         <div className="relative">
           <Text
@@ -71,8 +81,10 @@ const themeComponents = {
             className={cn(
               "mx-auto flex max-w-fit text-center uppercase transition-all",
               {
-                "border-b-2 border-muted": isCurrentUser && isPastElement,
-                "border-b-2 border-primary": isCurrentUser && !isPastElement,
+                "border-b-2 border-muted":
+                  currentUserAssignment && isPastElement,
+                "border-b-2 border-primary":
+                  currentUserAssignment && !isPastElement,
                 "text-muted": isPastElement,
               },
             )}
@@ -81,16 +93,15 @@ const themeComponents = {
             {character?.name}
           </Text>
           <div className="absolute -top-1 right-0">
-            {user?.imageUrl && (
-              <Image
-                src={user.imageUrl}
-                className={cn("rounded-full", {
-                  "brightness-50": isPastElement,
+            {currentUserAssignment && (
+              <Avatar
+                className={cn({
+                  "opacity-15": isPastElement,
                 })}
-                width={20}
-                height={20}
-                alt={user.fullName ?? "Reader"}
-              />
+              >
+                <AvatarImage src={currentUserAssignment.user.avatarUrl ?? ""} />
+                <AvatarFallback>{userInitials}</AvatarFallback>
+              </Avatar>
             )}
           </div>
         </div>

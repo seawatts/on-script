@@ -28,7 +28,6 @@ export function Presence(props: { readingId: string }) {
           Object.keys(readingChannel.presenceState()),
         );
 
-        console.log(onlineUsers);
         setOnlineUsers(onlineUsers);
       })
       .subscribe((status) => {

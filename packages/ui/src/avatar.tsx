@@ -11,7 +11,7 @@ const Avatar = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
-    className={cn("relative flex h-10 w-10 shrink-0 rounded-full", className)}
+    className={cn("relative flex size-5 shrink-0 rounded-full", className)}
     {...props}
   />
 ));
@@ -23,7 +23,7 @@ const AvatarImage = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Image
     ref={ref}
-    className={cn("aspect-square h-full w-full", className)}
+    className={cn("aspect-square h-full w-full rounded-full", className)}
     {...props}
   />
 ));
@@ -42,6 +42,16 @@ const AvatarFallback = React.forwardRef<
     {...props}
   />
 ));
+
+export function getInitials(props: {
+  firstName?: string | null;
+  lastName?: string | null;
+}) {
+  const firstInitial = props.firstName?.charAt(0).toUpperCase() ?? "";
+  const lastInitial = props.lastName?.charAt(0).toUpperCase() ?? "";
+
+  return `${firstInitial}${lastInitial}`;
+}
 
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 

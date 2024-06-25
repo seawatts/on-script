@@ -11,7 +11,6 @@ export const createNewReading = authenticatedAction
   .createServerAction()
   .input(z.object({ scriptId: z.string() }))
   .handler(async ({ ctx, input }) => {
-    console.log("Creating new reading", ctx.user.id);
     const [reading] = await ctx.db
       .insert(Reading)
       .values({

@@ -8,7 +8,11 @@ export const getReading = cache((readingId: string) => {
   return db.query.Reading.findFirst({
     where: eq(Reading.id, readingId),
     with: {
-      characterAssignments: true,
+      characterAssignments: {
+        with: {
+          user: true,
+        },
+      },
       createdBy: true,
       readingSessions: true,
       script: {
