@@ -47,6 +47,7 @@
     "@on-script/eslint-config": "workspace:*",
     "@on-script/prettier-config": "workspace:*",
     "@on-script/tailwind-config": "workspace:*",
+    "@on-script/lint-staged-config": "workspace:*",
     "@on-script/tsconfig": "workspace:*",
     "@types/node": "^20.14.8",
     "@types/pluralize": "0.0.33",

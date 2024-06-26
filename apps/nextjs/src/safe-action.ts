@@ -1,6 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { db } from "@on-script/db/client";
 import { createServerActionProcedure } from "zsa";
+
+import { db } from "@on-script/db/client";
 
 export const authenticatedAction = createServerActionProcedure().handler(
   async () => {

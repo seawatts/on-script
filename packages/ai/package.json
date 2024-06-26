@@ -33,6 +33,7 @@
   "devDependencies": {
     "@on-script/eslint-config": "workspace:*",
     "@on-script/prettier-config": "workspace:*",
+    "@on-script/lint-staged-config": "workspace:*",
     "@on-script/tsconfig": "workspace:*",
     "@types/pdf-parse": "1.1.4",
     "eslint": "^9.5.0",
