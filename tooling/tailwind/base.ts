@@ -1,7 +1,10 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  content: ["src/**/*.{ts,tsx}"],
+  content: [
+    "src/**/*.{ts,tsx}",
+    "!./node_modules/**", // Exclude everything in node_modules
+  ],
   darkMode: ["class"],
   theme: {
     extend: {

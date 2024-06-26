@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 
 import { use, useEffect, useState } from "react";
@@ -64,7 +67,7 @@ export function CharacterList(props: {
           if (payload.eventType === "DELETE") {
             setAssignments((previousItems) =>
               previousItems.filter(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (item) => (item as any)?.id !== payload.old.id,
               ),
             );

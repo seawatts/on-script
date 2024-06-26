@@ -15,7 +15,8 @@ export default function ScriptIdPage(props: { params: { scriptId: string } }) {
       characterAssignments: {
         with: {
           user: true,
-        }, },
+        },
+      },
       createdBy: true,
       readingSessions: true,
       script: true,

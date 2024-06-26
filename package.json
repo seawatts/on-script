@@ -8,7 +8,7 @@
   "scripts": {
     "build": "turbo run build",
     "clean": "git clean -xdf node_modules",
-    "clean:workspaces": "turbo run clean",
+    "clean:ws": "turbo run clean",
     "db:gen-migration": "turbo -F @on-script/db gen-migration",
     "db:migrate": "turbo -F @on-script/db migrate",
     "db:seed": "turbo -F @on-script/db seed",
@@ -29,11 +29,11 @@
   "devDependencies": {
     "@on-script/prettier-config": "workspace:*",
     "@on-script/commitlint-config": "workspace:*",
-    "@turbo/gen": "^2.0.5",
-    "husky": "^9.0.11",
-    "prettier": "^3.3.2",
-    "turbo": "^2.0.5",
-    "typescript": "^5.5.2"
+    "@turbo/gen": "2.0.5",
+    "husky": "9.0.11",
+    "prettier": "3.3.2",
+    "turbo": "2.0.5",
+    "typescript": "5.5.2"
   },
   "prettier": "@on-script/prettier-config",
   "commitlint": {

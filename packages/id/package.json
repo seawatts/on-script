@@ -27,9 +27,9 @@
     "@on-script/prettier-config": "workspace:*",
     "@on-script/lint-staged-config": "workspace:*",
     "@on-script/tsconfig": "workspace:*",
-    "eslint": "^9.5.0",
-    "prettier": "^3.3.2",
-    "typescript": "^5.5.2"
+    "eslint": "9.5.0",
+    "prettier": "3.3.2",
+    "typescript": "5.5.2"
   },
   "prettier": "@on-script/prettier-config"
 }
