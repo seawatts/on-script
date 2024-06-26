@@ -10,9 +10,14 @@ import { ScriptsList, ScriptsListLoading } from "./_components/scripts-list";
 
 export default function Page() {
   const readings = db.query.Reading.findMany({
-    orderBy: (reading, { asc }) => asc(reading.createdAt),
+    orderBy: (reading, { desc }) => desc(reading.createdAt),
     where: (reading, { isNull }) => isNull(reading.endedAt),
     with: {
+      characterAssignments: {
+        with: {
+          user: true,
+        },
+      },
       createdBy: true,
       currentElement: true,
       readingSessions: true,

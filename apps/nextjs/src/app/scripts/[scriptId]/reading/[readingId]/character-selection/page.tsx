@@ -1,7 +1,7 @@
 // export const runtime = "edge";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 
 import { db } from "@on-script/db/client";
 
@@ -10,14 +10,14 @@ import {
   CharacterListLoading,
 } from "./_components/character-list";
 
-export default async function Page(props: {
+export default function Page(props: {
   params: { scriptId: string; readingId: string };
 }) {
   const { scriptId, readingId } = props.params;
 
-  const user = await currentUser();
+  const { userId } = auth();
 
-  if (!user) {
+  if (!userId) {
     return redirect("/sign-in");
   }
 
@@ -40,7 +40,7 @@ export default async function Page(props: {
       <main className="container flex min-h-screen w-full max-w-lg items-center justify-center">
         <Suspense fallback={<CharacterListLoading />}>
           <CharacterList
-            userId={user.id}
+            userId={userId}
             characterAssignments={characterAssignments}
             characters={characters}
             scriptId={scriptId}

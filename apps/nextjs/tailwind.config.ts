@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
-import baseConfig from "@on-script/tailwind-config/web";
 import { fontFamily } from "tailwindcss/defaultTheme";
+
+import baseConfig from "@on-script/tailwind-config/web";
 
 export default {
   // We need to append the path to the UI package to the content array so that
@@ -9,6 +10,15 @@ export default {
   presets: [baseConfig],
   theme: {
     extend: {
+      keyframes: {
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
+      },
+      animation: {
+        "caret-blink": "caret-blink 1.25s ease-out infinite",
+      },
       fontFamily: {
         sans: ["var(--font-geist-sans)", ...fontFamily.sans],
         script: ["var(--font-courier-prime)", ...fontFamily.mono],
