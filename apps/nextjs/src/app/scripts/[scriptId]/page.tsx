@@ -12,6 +12,10 @@ export default function ScriptIdPage(props: { params: { scriptId: string } }) {
     orderBy: (reading, { asc }) => asc(reading.createdAt),
     where: (reading, { isNull }) => isNull(reading.endedAt),
     with: {
+      characterAssignments: {
+        with: {
+          user: true,
+        }, },
       createdBy: true,
       readingSessions: true,
       script: true,
