@@ -1,5 +1,8 @@
 import { Suspense } from "react";
 
+// import { fetchQuery } from "convex/nextjs";
+
+// import { api } from "@on-script/backend/convex/_generated/api";
 import { db } from "@on-script/db/client";
 import { H1 } from "@on-script/ui/typography";
 
@@ -32,6 +35,9 @@ export default function Page() {
       readings: true,
     },
   });
+
+  // const scripts2 = useQuery(api.scripts.get);
+  // await fetchQuery(api.scripts.get);
 
   return (
     <main className="container h-screen py-16">

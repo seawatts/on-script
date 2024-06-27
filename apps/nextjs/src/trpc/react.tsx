@@ -33,13 +33,13 @@ const getQueryClient = () => {
   }
 };
 
-export const api = createTRPCReact<AppRouter>();
+export const api2 = createTRPCReact<AppRouter>();
 
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
 
   const [trpcClient] = useState(() =>
-    api.createClient({
+    api2.createClient({
       links: [
         loggerLink({
           enabled: (op) =>
@@ -61,9 +61,9 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <api.Provider client={trpcClient} queryClient={queryClient}>
+      <api2.Provider client={trpcClient} queryClient={queryClient}>
         {props.children}
-      </api.Provider>
+      </api2.Provider>
     </QueryClientProvider>
   );
 }

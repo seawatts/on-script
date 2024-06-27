@@ -13,7 +13,7 @@ import {
 import { Input } from "@on-script/ui/input";
 import { toast } from "@on-script/ui/toast";
 
-import { api } from "~/trpc/react";
+import { api2 } from "~/trpc/react";
 
 export const NewScript = () => {
   const form = useForm({
@@ -24,7 +24,7 @@ export const NewScript = () => {
     schema: CreateScriptSchema,
   });
 
-  const scrapeUrl = api.script.scrapeUrl.useMutation({
+  const scrapeUrl = api2.script.scrapeUrl.useMutation({
     onSuccess: (data) => {
       console.log(data);
       toast.success("Scraped successfully");

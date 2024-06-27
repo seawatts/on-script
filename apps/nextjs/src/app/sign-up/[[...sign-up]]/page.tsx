@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import * as Clerk from "@clerk/elements/common";
 import * as SignUp from "@clerk/elements/sign-up";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -119,9 +118,9 @@ export default function SignUpPage() {
                             </Button>
                           </SignUp.Action>
                           <Button variant="link" size="sm" asChild>
-                            <Link href="/sign-in">
+                            {/* <Link href="/sign-in">
                               Already have an account? Sign in
-                            </Link>
+                            </Link> */}
                           </Button>
                         </div>
                       </CardFooter>

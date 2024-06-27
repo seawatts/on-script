@@ -11,6 +11,7 @@ const config = {
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
     "@on-script/api",
+    "@on-script/backend",
     "@on-script/db",
     "@on-script/ui",
     "@on-script/validators",

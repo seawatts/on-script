@@ -10,6 +10,7 @@ import { Toaster } from "@on-script/ui/toast";
 import "~/app/globals.css";
 
 import { env } from "~/env";
+import ConvexClientProvider from "~/providers/convex-provider";
 import { UserStoreProvider } from "~/providers/user-store-provider";
 
 // If loading a variable font, you don't need to specify the font weight
@@ -60,9 +61,10 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           courier.variable,
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {/* <TRPCReactProvider> */}
-          {/* <header>
+        <ConvexClientProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {/* <TRPCReactProvider> */}
+            {/* <header>
                 <SignedOut>
                 <SignInButton />
                 </SignedOut>
@@ -70,15 +72,16 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 <UserButton />
                 </SignedIn>
                 </header> */}
-          <UserStoreProvider user={undefined}>
-            {props.children}
-          </UserStoreProvider>
-          {/* </TRPCReactProvider> */}
-          {/* <div className="fixed bottom-4 right-4">
+            <UserStoreProvider user={undefined}>
+              {props.children}
+            </UserStoreProvider>
+            {/* </TRPCReactProvider> */}
+            {/* <div className="fixed bottom-4 right-4">
             <ThemeToggle />
           </div> */}
-          <Toaster />
-        </ThemeProvider>
+            <Toaster />
+          </ThemeProvider>
+        </ConvexClientProvider>
       </body>
     </html>
     // </ClerkProvider>

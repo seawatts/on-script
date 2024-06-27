@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "5.1.6",
+    "@on-script/backend": "workspace:*",
     "@on-script/api": "workspace:*",
     "@on-script/db": "workspace:*",
     "@on-script/ui": "workspace:*",
@@ -22,6 +23,7 @@
     "@on-script/validators": "workspace:*",
     "@supabase/ssr": "0.3.0",
     "@t3-oss/env-nextjs": "0.10.1",
+    "convex": "1.12.2",
     "@tanstack/react-query": "5.48.0",
     "@trpc/client": "11.0.0-rc.364",
     "@trpc/react-query": "11.0.0-rc.364",

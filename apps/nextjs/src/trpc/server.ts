@@ -16,4 +16,4 @@ const createContext = cache(() => {
   });
 });
 
-export const api = createCaller(createContext);
+export const api2 = createCaller(createContext);

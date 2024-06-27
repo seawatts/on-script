@@ -41,6 +41,9 @@ importers:
       '@on-script/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@on-script/backend':
+        specifier: workspace:*
+        version: link:../../packages/backend
       '@on-script/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -68,6 +71,9 @@ importers:
       '@trpc/server':
         specifier: 11.0.0-rc.364
         version: 11.0.0-rc.364
+      convex:
+        specifier: 1.12.2
+        version: 1.12.2(@clerk/clerk-react@5.2.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       dayjs:
         specifier: 1.11.11
         version: 1.11.11
@@ -261,7 +267,7 @@ importers:
         specifier: 5.5.2
         version: 5.5.2
 
-  packages/convex:
+  packages/backend:
     dependencies:
       convex:
         specifier: 1.12.2

@@ -1,22 +1,19 @@
 {
-  "name": "@on-script/convex",
+  "name": "@on-script/backend",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    }
-  },
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch",
+    "dev": "convex dev",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "convex": "1.12.2"
   },
   "devDependencies": {
     "@on-script/eslint-config": "workspace:*",
@@ -27,8 +24,5 @@
     "prettier": "3.3.2",
     "typescript": "5.5.2"
   },
-  "prettier": "@on-script/prettier-config",
-  "dependencies": {
-    "convex": "1.12.2"
-  }
+  "prettier": "@on-script/prettier-config"
 }
