@@ -24,10 +24,10 @@
   },
   "devDependencies": {
     "@on-script/eslint-config": "workspace:*",
-    "@on-script/prettier-config": "workspace:*",
     "@on-script/lint-staged-config": "workspace:*",
+    "@on-script/prettier-config": "workspace:*",
     "@on-script/tsconfig": "workspace:*",
-    "eslint": "9.5.0",
+    "eslint": "9.6.0",
     "prettier": "3.3.2",
     "typescript": "5.5.2"
   },

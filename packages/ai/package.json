@@ -19,26 +19,37 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "test": "pnpm with-env vitest",
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@ai-sdk/openai": "0.0.34",
     "@on-script/id": "workspace:*",
     "@t3-oss/env-core": "0.10.1",
-    "openai": "4.52.0",
+    "ai": "3.2.15",
+    "canvas": "2.11.2",
+    "langchain": "0.2.8",
+    "openai": "4.52.2",
     "pdf-lib": "1.17.1",
     "pdf-parse": "1.1.1",
-    "playwright": "1.44.1",
-    "zod": "3.23.8"
+    "pdf2pic": "3.1.1",
+    "pdfjs-dist": "4.3.136",
+    "playwright": "1.45.0",
+    "zod": "3.23.8",
+    "zod-to-json-schema": "3.23.1"
   },
   "devDependencies": {
     "@on-script/eslint-config": "workspace:*",
-    "@on-script/prettier-config": "workspace:*",
     "@on-script/lint-staged-config": "workspace:*",
+    "@on-script/prettier-config": "workspace:*",
     "@on-script/tsconfig": "workspace:*",
     "@types/pdf-parse": "1.1.4",
-    "eslint": "9.5.0",
+    "eslint": "9.6.0",
     "prettier": "3.3.2",
-    "typescript": "5.5.2"
+    "tsx": "4.16.0",
+    "typescript": "5.5.2",
+    "vitest": "1.6.0"
   },
   "prettier": "@on-script/prettier-config"
 }

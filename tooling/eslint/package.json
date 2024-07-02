@@ -22,16 +22,16 @@
     "eslint-plugin-react": "7.34.3",
     "eslint-plugin-react-hooks": "rc",
     "eslint-plugin-sort-keys-fix": "1.1.2",
-    "eslint-plugin-turbo": "2.0.4",
+    "eslint-plugin-turbo": "2.0.6",
     "eslint-plugin-unicorn": "54.0.0",
     "eslint-plugin-unused-imports": "4.0.0",
     "typescript-eslint": "rc-v8"
   },
   "devDependencies": {
-    "@on-script/prettier-config": "workspace:*",
     "@on-script/lint-staged-config": "workspace:*",
+    "@on-script/prettier-config": "workspace:*",
     "@on-script/tsconfig": "workspace:*",
-    "eslint": "9.5.0",
+    "eslint": "9.6.0",
     "prettier": "3.3.2",
     "typescript": "5.5.2"
   },
