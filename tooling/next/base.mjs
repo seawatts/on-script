@@ -21,6 +21,7 @@ const nextConfig = {
       { hostname: "lh3.googleusercontent.com" },
       { hostname: "media.licdn.com" },
       { hostname: "img.clerk.com" },
+      { hostname: "image.tmdb.org" },
     ],
   },
   logging: {
@@ -29,7 +30,6 @@ const nextConfig = {
     },
   },
   poweredByHeader: false,
-  reactStrictMode: true,
   typescript: { ignoreBuildErrors: true },
 };
 

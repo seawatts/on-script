@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { readFileSync } from "node:fs";
 import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
@@ -18,7 +16,6 @@ async function pdfToImageBuffers(pdfPath: string): Promise<Buffer[]> {
 
   for (let index = 0; index < numberPages; index++) {
     const page = pdfDocument.getPage(index);
-    page.doc.
 
     // Create a canvas to draw the page onto
     const canvas = createCanvas(page.getWidth(), page.getHeight());
