@@ -31,11 +31,11 @@
   "devDependencies": {
     "@on-script/commitlint-config": "workspace:*",
     "@on-script/prettier-config": "workspace:*",
-    "@turbo/gen": "2.0.6",
-    "husky": "9.0.11",
-    "prettier": "3.3.2",
-    "turbo": "2.0.6",
-    "typescript": "5.5.2"
+    "@turbo/gen": "2.0.9",
+    "husky": "9.1.1",
+    "prettier": "3.3.3",
+    "turbo": "2.0.9",
+    "typescript": "5.5.3"
   },
   "prettier": "@on-script/prettier-config",
   "commitlint": {

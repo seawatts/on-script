@@ -8,21 +8,11 @@ export default {
   // those classes are included correctly.
   content: [...baseConfig.content, "../../packages/ui/src/**/*.{ts,tsx}"],
   presets: [baseConfig],
+  plugins: [...baseConfig.plugins],
   theme: {
     extend: {
-      keyframes: {
-        "caret-blink": {
-          "0%,70%,100%": { opacity: "1" },
-          "20%,50%": { opacity: "0" },
-        },
-      },
-      animation: {
-        "caret-blink": "caret-blink 1.25s ease-out infinite",
-      },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", ...fontFamily.sans],
         script: ["var(--font-courier-prime)", ...fontFamily.mono],
-        mono: ["var(--font-geist-mono)", ...fontFamily.mono],
       },
     },
   },

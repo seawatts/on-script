@@ -19,8 +19,8 @@
     "@on-script/eslint-config": "workspace:*",
     "@on-script/lint-staged-config": "workspace:*",
     "@on-script/prettier-config": "workspace:*",
-    "eslint": "9.6.0",
-    "prettier": "3.3.2"
+    "eslint": "9.7.0",
+    "prettier": "3.3.3"
   },
   "prettier": "@on-script/prettier-config"
 }

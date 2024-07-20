@@ -27,7 +27,7 @@ interface UseSubscribeProps<T> {
 
 export function useSubscribe<T>(props: UseSubscribeProps<T>) {
   const [items, setItems] = useState<T[]>(
-    props.items instanceof Promise ? use(props.items) : props.items ?? [],
+    props.items instanceof Promise ? use(props.items) : (props.items ?? []),
   );
 
   useEffect(() => {
