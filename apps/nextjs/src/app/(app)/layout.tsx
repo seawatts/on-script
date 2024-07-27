@@ -60,7 +60,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           courier.variable,
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           {/* <TRPCReactProvider> */}
           {/* <header>
                 <SignedOut>
