@@ -10,7 +10,7 @@ const movieScripts = {
   // },
   // "Back to the Future": {
   //   code: "HIAUIY",
-  //   pages: [1, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80],
+  //   pages: [1, 67 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80],
   //   url: "https://www.dailyscript.com/scripts/bttf4th.pdf",
   // },
   // "Braveheart - Freedom": {
