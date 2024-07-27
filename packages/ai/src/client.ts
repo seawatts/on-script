@@ -96,7 +96,7 @@ export async function parseScriptFromUrl(props: {
 
     const newCharacters = await createCharacters({
       characters,
-      elements,
+      elements: elements as any,
       script,
     });
 
@@ -104,7 +104,7 @@ export async function parseScriptFromUrl(props: {
 
     const scenes = await generateScenesFromElements({
       characters,
-      elements,
+      elements: elements as any,
       lastElement,
     });
 
@@ -130,7 +130,7 @@ export async function parseScriptFromUrl(props: {
 
     const newElements = await createElementsInDatabase({
       characters,
-      elements,
+      elements: elements as any,
       lastElement,
       page: index,
       savedScenes,
