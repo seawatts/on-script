@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -19,9 +20,12 @@ export const createNewReading = authenticatedAction
       })
       .returning({ id: Reading.id });
 
+    console.log("created reading", reading?.id);
+
     if (!reading) {
       throw new Error("Failed to create reading");
     }
+    revalidatePath(`/`);
     redirect(
       `/scripts/${input.scriptId}/reading/${reading.id}/character-selection`,
     );

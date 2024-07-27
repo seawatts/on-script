@@ -37,6 +37,7 @@ export const env = createEnv({
     CLERK_SECRET_KEY: z.string(),
     OPENAI_API_KEY: z.string(),
     POSTGRES_URL: z.string().url(),
+    TMDB_API_KEY: z.string(),
     WEBHOOK_SECRET: z.string(),
   },
 

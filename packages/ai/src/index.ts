@@ -1,2 +1,2 @@
 export * from "./client";
-export * from "./tools/scrape-website";
+export * from "./utils/scrape-website";

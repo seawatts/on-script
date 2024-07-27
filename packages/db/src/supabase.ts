@@ -16,6 +16,7 @@ export interface Database {
           name: string;
           scriptId: string;
           summary: string | null;
+          tmdbId: number | null;
           updatedAt: string | null;
         };
         Insert: {
@@ -24,6 +25,7 @@ export interface Database {
           name: string;
           scriptId: string;
           summary?: string | null;
+          tmdbId?: number | null;
           updatedAt?: string | null;
         };
         Update: {
@@ -32,6 +34,7 @@ export interface Database {
           name?: string;
           scriptId?: string;
           summary?: string | null;
+          tmdbId?: number | null;
           updatedAt?: string | null;
         };
         Relationships: [
@@ -101,7 +104,7 @@ export interface Database {
           index: number;
           metadata: Json | null;
           page: number;
-          scene: number;
+          sceneId: string;
           scriptId: string;
           text: string;
           type: Database["public"]["Enums"]["elementType"];
@@ -114,7 +117,7 @@ export interface Database {
           index: number;
           metadata?: Json | null;
           page: number;
-          scene: number;
+          sceneId: string;
           scriptId: string;
           text: string;
           type: Database["public"]["Enums"]["elementType"];
@@ -127,7 +130,7 @@ export interface Database {
           index?: number;
           metadata?: Json | null;
           page?: number;
-          scene?: number;
+          sceneId?: string;
           scriptId?: string;
           text?: string;
           type?: Database["public"]["Enums"]["elementType"];
@@ -139,6 +142,13 @@ export interface Database {
             columns: ["characterId"];
             isOneToOne: false;
             referencedRelation: "character";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "element_sceneId_scene_id_fk";
+            columns: ["sceneId"];
+            isOneToOne: false;
+            referencedRelation: "scene";
             referencedColumns: ["id"];
           },
           {
@@ -250,6 +260,59 @@ export interface Database {
           },
         ];
       };
+      scene: {
+        Row: {
+          createdAt: string;
+          id: string;
+          keywords: string[];
+          location: string;
+          name: string;
+          popularity: number;
+          scriptId: string;
+          sentiment: string;
+          summary: string;
+          themes: string[];
+          time: string;
+          updatedAt: string | null;
+        };
+        Insert: {
+          createdAt?: string;
+          id: string;
+          keywords?: string[];
+          location: string;
+          name: string;
+          popularity: number;
+          scriptId: string;
+          sentiment: string;
+          summary: string;
+          themes?: string[];
+          time: string;
+          updatedAt?: string | null;
+        };
+        Update: {
+          createdAt?: string;
+          id?: string;
+          keywords?: string[];
+          location?: string;
+          name?: string;
+          popularity?: number;
+          scriptId?: string;
+          sentiment?: string;
+          summary?: string;
+          themes?: string[];
+          time?: string;
+          updatedAt?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "scene_scriptId_script_id_fk";
+            columns: ["scriptId"];
+            isOneToOne: false;
+            referencedRelation: "script";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       script: {
         Row: {
           basedOn: string | null;
@@ -259,6 +322,7 @@ export interface Database {
           imageUrl: string | null;
           readingTime: number;
           title: string;
+          tmdbId: number | null;
           updatedAt: string | null;
           writtenBy: string;
         };
@@ -270,6 +334,7 @@ export interface Database {
           imageUrl?: string | null;
           readingTime?: number;
           title: string;
+          tmdbId?: number | null;
           updatedAt?: string | null;
           writtenBy: string;
         };
@@ -281,6 +346,7 @@ export interface Database {
           imageUrl?: string | null;
           readingTime?: number;
           title?: string;
+          tmdbId?: number | null;
           updatedAt?: string | null;
           writtenBy?: string;
         };

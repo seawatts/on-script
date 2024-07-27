@@ -24,18 +24,19 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@ai-sdk/openai": "0.0.37",
+    "@ai-sdk/openai": "0.0.38",
+    "@on-script/db": "workspace:*",
     "@on-script/id": "workspace:*",
-    "@t3-oss/env-core": "0.10.1",
-    "ai": "3.2.32",
+    "@t3-oss/env-core": "0.11.0",
+    "ai": "3.2.34",
     "canvas": "2.11.2",
     "langchain": "0.2.10",
-    "openai": "4.52.7",
+    "openai": "4.53.0",
     "pdf-lib": "1.17.1",
     "pdf-parse": "1.1.1",
     "pdf2pic": "3.1.1",
     "pdfjs-dist": "4.4.168",
-    "playwright": "1.45.2",
+    "playwright": "1.45.3",
     "zod": "3.23.8",
     "zod-to-json-schema": "3.23.1"
   },
@@ -48,8 +49,8 @@
     "eslint": "9.7.0",
     "prettier": "3.3.3",
     "tsx": "4.16.2",
-    "typescript": "5.5.3",
-    "vitest": "2.0.3"
+    "typescript": "5.5.4",
+    "vitest": "2.0.4"
   },
   "prettier": "@on-script/prettier-config"
 }

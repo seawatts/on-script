@@ -1,187 +1,375 @@
-import type { Text } from "openai/resources/beta/threads/messages";
-import type { z } from "zod";
-import type { JsonSchema7Type } from "zod-to-json-schema";
-import OpenAI, { toFile } from "openai";
-import zodToJsonSchema from "zod-to-json-schema";
+import { writeFileSync } from "node:fs";
+import path from "node:path";
+import type { GenerateObjectResult } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { generateObject } from "ai";
 
-// import { env } from "./env";
+import type { ElementInsertSchema } from "@on-script/db/schema";
+import { eq } from "@on-script/db";
+import { db } from "@on-script/db/client";
+import {
+  Character,
+  Element,
+  ElementType,
+  Scene,
+  Script,
+} from "@on-script/db/schema";
 
-// const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
-const openai = new OpenAI({ apiKey: "123" });
+import type { ElementsSchemaType } from "./prompts/elements-prompt";
+import type { SceneSchemaType } from "./prompts/scene-prompt";
+import type { CharacterForSet } from "./types";
+import { elementsPrompt, elementsSchema } from "./prompts/elements-prompt";
+import { scenePrompt, sceneSchema } from "./prompts/scene-prompt";
+import { scriptPrompt, scriptSchema } from "./prompts/script-prompt";
+import { pdfToPng } from "./utils/pdf-to-png";
+import { scrapeWebsite } from "./utils/scrape-website";
 
-const formatInstructionsComplex = (
-  schema: JsonSchema7Type,
-) => `You must format your output as a JSON value that adheres to a given "JSON Schema" instance.
+interface LastElement {
+  text: string;
+  id: string;
+  index: number;
+  characterId: string;
+  isElementCutOffOfImage: boolean | null;
+  type: keyof typeof ElementType;
+  metadata?: unknown;
+}
 
-"JSON Schema" is a declarative language that allows you to annotate and validate JSON documents.
-
-For example, the example "JSON Schema" instance {{"properties": {{"foo": {{"description": "a list of test words", "type": "array", "items": {{"type": "string"}}}}}}, "required": ["foo"]}}}}
-would match an object with one required property, "foo". The "type" property specifies "foo" must be an "array", and the "description" property semantically describes it as "a list of test words". The items within "foo" must be strings.
-Thus, the object {{"foo": ["bar", "baz"]}} is a well-formatted instance of this example "JSON Schema". The object {{"properties": {{"foo": ["bar", "baz"]}}}} is not well-formatted.
-
-Your output will be parsed and type-checked according to the provided schema instance, so make sure all fields in your output match the schema exactly and there are no trailing commas!
-
-Here is the JSON Schema instance your output must adhere to. Include the enclosing markdown codeblock:
-
-\`\`\`json
-${JSON.stringify(schema)}
-\`\`\`
-`;
-
-export function createAssistant(props: {
-  name: string;
-  vectorStoreId?: string;
+export async function parseScriptFromUrl(props: {
+  url: string;
+  pages: number[];
 }) {
-  return openai.beta.assistants.create({
-    metadata: {},
-    model: "gpt-4o",
-    name: props.name,
-    temperature: 0,
-    tool_resources: {
-      file_search: {
-        vector_store_ids: props.vectorStoreId
-          ? [props.vectorStoreId]
-          : undefined,
-      },
-    },
-    tools: [{ type: "file_search" }],
-  });
-}
+  const website = await scrapeWebsite({ url: props.url });
 
-export function createVectorStore(props: { name: string }) {
-  return openai.beta.vectorStores.create({
-    name: props.name,
-  });
-}
-
-export async function uploadFile(props: {
-  vectorStoreId: string;
-  file: Buffer;
-  name: string;
-}) {
-  const file = await toFile(props.file, props.name);
-
-  return openai.beta.vectorStores.files.uploadAndPoll(
-    props.vectorStoreId,
-    file,
-  );
-}
-
-export async function submitMessageToThread<
-  T extends z.ZodTypeAny = z.ZodTypeAny,
->(props: {
-  assistantId: string;
-  threadId?: string;
-  formatSchema: T;
-  message: string;
-}): Promise<z.infer<T>> {
-  // eslint-disable-next-line unicorn/no-await-expression-member
-  const threadId = props.threadId ?? (await openai.beta.threads.create({})).id;
-
-  await openai.beta.threads.messages.create(threadId, {
-    content: `${props.message}
-
-    --- Start format instructions ---
-    ${formatInstructionsComplex(zodToJsonSchema(props.formatSchema))}
-    --- End format instructions`,
-    role: "user",
+  const pdfImages = await pdfToPng({
+    buffer: website.pdfBuffer,
+    pages: props.pages,
   });
 
-  await openai.beta.threads.runs.createAndPoll(threadId, {
-    assistant_id: props.assistantId,
-  });
+  let characters = new Set<CharacterForSet>();
 
-  const messages = await openai.beta.threads.messages.list(threadId);
-  const lastMessage = messages.data.at(0);
-  const content =
-    lastMessage?.content[0]?.type === "text"
-      ? lastMessage.content[0].text
-      : undefined;
-
-  if (!content) {
-    throw new Error("No content found in response");
+  const firstPage = pdfImages[0]?.base64;
+  if (pdfImages.length === 0 || !firstPage) {
+    throw new Error("Failed to convert pdf to images");
   }
 
-  console.log(content);
-  const jsonResponse = cleanResponseToJson<T>({
-    content,
-    formatSchema: props.formatSchema,
+  const scriptInfo = await generateScriptFromImage({
+    image: firstPage,
   });
-  console.log(jsonResponse);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return jsonResponse as unknown as z.infer<T>;
+  const [script] = await db
+    .insert(Script)
+    .values({
+      basedOn: scriptInfo.object.basedOn,
+      basedOnBy: scriptInfo.object.basedOnBy,
+      title: scriptInfo.object.title,
+      writtenAt: scriptInfo.object.writtenAt
+        ? new Date(scriptInfo.object.writtenAt)
+        : undefined,
+      writtenBy: scriptInfo.object.writtenBy,
+    })
+    .returning({
+      id: Script.id,
+    });
+
+  if (!script) {
+    throw new Error("Failed to insert script");
+  }
+
+  let lastElement: LastElement | undefined;
+
+  for (const [index, image] of pdfImages.entries()) {
+    if (!image.base64) {
+      console.error(`Failed to convert page ${index + 1} to image`);
+      continue;
+    }
+
+    writeFileSync(
+      path.resolve(import.meta.dirname, `./base64-output.${index}.png`),
+      image.base64,
+      "base64",
+    );
+
+    const elements = await generateElementsFromImage({
+      characters,
+      image: image.base64,
+    });
+
+    const newCharacters = await createCharacters({
+      characters,
+      elements,
+      script,
+    });
+
+    characters = new Set([...characters, ...newCharacters]);
+
+    const scenes = await generateScenesFromElements({
+      characters,
+      elements,
+      lastElement,
+    });
+
+    const savedScenes = await db
+      .insert(Scene)
+      .values(
+        scenes.object.scenes.map((scene) => ({
+          keywords: scene.keywords,
+          location: scene.location,
+          popularityScore: scene.popularityScore,
+          scriptId: script.id,
+          sentiment: scene.sentiment,
+          summary: scene.summary,
+          themes: scene.themes,
+          time: scene.time,
+          title: scene.title,
+        })),
+      )
+      .returning({
+        id: Scene.id,
+        title: Scene.title,
+      });
+
+    const newElements = await createElementsInDatabase({
+      characters,
+      elements,
+      lastElement,
+      page: index,
+      savedScenes,
+      scenes,
+      script,
+    });
+
+    lastElement = newElements?.at(-1);
+  }
 }
 
-export async function chat<T extends z.ZodTypeAny = z.ZodTypeAny>(props: {
-  formatSchema: T;
-  message: string;
-  model?: string;
-  temperature?: number;
-}): Promise<z.infer<T>> {
-  const response = await openai.chat.completions.create({
-    max_tokens: 2000,
-    messages: [
-      // {
-      //   role: "system",
-      //   content:
-      //     "You are a helpful assistant that extracts movie script scenes along with metadata",
-      // },
-      {
-        content: `${props.message}
+async function createElementsInDatabase(props: {
+  page: number;
+  lastElement?: LastElement;
+  elements: GenerateObjectResult<ElementsSchemaType>;
+  scenes: GenerateObjectResult<SceneSchemaType>;
+  savedScenes: { id: string; title: string }[];
+  characters: Set<CharacterForSet>;
+  script: { id: string };
+}) {
+  let elements = props.elements.object.elements;
+  const firstElement = elements[0];
 
-        --- Start format instructions ---
-        ${formatInstructionsComplex(zodToJsonSchema(props.formatSchema))}
-        --- End format instructions`,
+  if (props.lastElement?.isElementCutOffOfImage && firstElement) {
+    await db
+      .update(Element)
+      .set({
+        text: `${props.lastElement.text} ${firstElement.text}`,
+      })
+      .where(eq(Element.id, props.lastElement.id))
+      .returning({
+        id: Element.id,
+      });
+
+    elements = elements.slice(1);
+  }
+
+  const elementsWithSceneAndCharacterId = elements.map((element, index) => {
+    const overallIndex = (props.lastElement?.index ?? 0) + index;
+
+    const generatedScene = props.scenes.object.scenes.find((scene) =>
+      scene.elementIndices.includes(overallIndex),
+    );
+
+    const savedScene = generatedScene
+      ? props.savedScenes.find((saved) => saved.title === generatedScene.title)
+      : null;
+
+    if (!savedScene) {
+      console.error(`Failed to find scene for element ${overallIndex}`);
+    }
+
+    let character = [...props.characters].find(
+      (character) => character.name === element.characterName,
+    );
+
+    if (!character) {
+      character = [...props.characters].find(
+        (character) => character.name === "Narrator",
+      );
+    }
+
+    if (!character) {
+      console.error(`Failed to find character for element ${overallIndex}`);
+      return;
+    }
+
+    return {
+      characterId: character.id,
+      index: overallIndex,
+      isCharacterExtra: element.isCharacterExtra,
+      isElementCutOffOfImage: element.isElementCutOffOfImage,
+      metadata: {
+        dualDialogue: element.dual,
+        extension: element.extension,
+      },
+      page: props.page,
+      sceneId: savedScene?.id,
+      scriptId: props.script.id,
+      text: element.text,
+      type: ElementType[element.type],
+    } satisfies ElementInsertSchema;
+  });
+
+  const elementsToInsert = elementsWithSceneAndCharacterId.filter(
+    (element) => element !== undefined,
+  );
+
+  if (elementsToInsert.length > 0) {
+    return db.insert(Element).values(elementsToInsert).returning({
+      characterId: Element.characterId,
+      id: Element.id,
+      index: Element.index,
+      isElementCutOffOfImage: Element.isElementCutOffOfImage,
+      metadata: Element.metadata,
+      text: Element.text,
+      type: Element.type,
+    });
+  } else {
+    console.error("Failed to insert elements");
+  }
+}
+
+async function createCharacters(props: {
+  elements: GenerateObjectResult<ElementsSchemaType>;
+  characters: Set<CharacterForSet>;
+  script: { id: string };
+}): Promise<Set<CharacterForSet>> {
+  const { elements, characters, script } = props;
+  const narratorCharacterName = "Narrator";
+
+  const characterNames = new Set(
+    elements.object.elements
+      .filter((element) => element.characterName && element.type === "dialog")
+      .map((element) => element.characterName),
+  );
+
+  const newCharacters = [...characterNames, narratorCharacterName].filter(
+    (name) =>
+      ![...characters].some(
+        (character) => character.name === name && Boolean(name),
+      ),
+  ) as string[];
+
+  if (newCharacters.length > 0) {
+    const insertedCharacters = await db
+      .insert(Character)
+      .values(newCharacters.map((name) => ({ name, scriptId: script.id })))
+      .returning({
+        id: Character.id,
+        name: Character.name,
+      })
+      .execute();
+
+    const newInsertedCharacters = insertedCharacters.filter(
+      (character) => character.name && character.id,
+    );
+
+    for (const character of newInsertedCharacters) characters.add(character);
+
+    return new Set<CharacterForSet>(newInsertedCharacters);
+  }
+
+  return new Set<CharacterForSet>();
+}
+
+async function generateScenesFromElements(props: {
+  lastElement?: LastElement;
+  characters: Set<CharacterForSet>;
+  elements: GenerateObjectResult<ElementsSchemaType>;
+}) {
+  const elementsWithIndex = props.elements.object.elements.map(
+    (element, index) => ({
+      ...element,
+      index: (props.lastElement?.index ?? 0) + index,
+    }),
+  );
+
+  return await generateObject({
+    maxTokens: 4096,
+    messages: [
+      {
+        content: scenePrompt({ characters: props.characters }),
+        role: "system",
+      },
+      {
+        content: [
+          {
+            text: JSON.stringify(elementsWithIndex, null, 2),
+            type: "text",
+          },
+        ],
         role: "user",
       },
     ],
-    model: props.model ?? "gpt-4o",
-    response_format: { type: "json_object" },
-    temperature: props.temperature ?? 0,
+    mode: "json",
+    model: openai("gpt-4o"),
+    schema: sceneSchema,
+    temperature: 0,
   });
+}
 
-  const content = response.choices[0]?.message.content;
-
-  if (!content) {
-    throw new Error("No content found in response");
-  }
-
+async function generateElementsFromImage(props: {
+  characters: Set<CharacterForSet>;
+  image: string;
+}) {
   try {
-    const parsedMessage = JSON.parse(content) as unknown as T;
+    const response = await generateObject({
+      maxTokens: 4096,
+      messages: [
+        {
+          content: elementsPrompt({ characters: props.characters }),
+          role: "system",
+        },
+        {
+          content: [
+            {
+              image: props.image,
+              type: "image",
+            },
+          ],
+          role: "user",
+        },
+      ],
+      mode: "json",
+      model: openai("gpt-4o"),
+      schema: elementsSchema,
+      temperature: 0,
+    });
 
-    const cleanedResponse = props.formatSchema.safeParse(parsedMessage);
-    console.log(cleanedResponse.data);
-    return cleanedResponse.data as unknown as T;
+    console.log(response.finishReason, response.warnings);
+    return response;
   } catch (error) {
-    console.error("Error parsing JSON:", error);
+    console.log(error);
     throw error;
   }
 }
 
-export function cleanResponseToJson<
-  T extends z.ZodTypeAny = z.ZodTypeAny,
->(props: { content: Text; formatSchema: T }): z.infer<T> {
-  let messageWithoutFormatting = props.content.value
-    .replaceAll("```json", "")
-    .replaceAll("```", "")
-    .replaceAll(String.raw`\n`, "")
-    .trim();
-
-  for (const annotation of props.content.annotations) {
-    messageWithoutFormatting = messageWithoutFormatting.replace(
-      annotation.text,
-      "",
-    );
-  }
-
-  try {
-    const parsedMessage = JSON.parse(messageWithoutFormatting) as unknown as T;
-
-    const cleanedResponse = props.formatSchema.safeParse(parsedMessage);
-    return cleanedResponse as unknown as T;
-  } catch (error) {
-    console.error("Error parsing JSON:", error);
-    throw error;
-  }
+async function generateScriptFromImage(props: { image: string }) {
+  return await generateObject({
+    maxTokens: 4096,
+    messages: [
+      {
+        content: scriptPrompt(),
+        role: "system",
+      },
+      {
+        content: [
+          {
+            image: props.image,
+            type: "image",
+          },
+        ],
+        role: "user",
+      },
+    ],
+    mode: "json",
+    model: openai("gpt-4o"),
+    schema: scriptSchema,
+    temperature: 0,
+  });
 }

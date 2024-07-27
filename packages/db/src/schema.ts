@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   boolean,
   integer,
@@ -24,12 +24,14 @@ export const Script = pgTable("script", {
     .primaryKey(),
   imageUrl: text("imageUrl"),
   readingTime: integer("readingTime").default(0).notNull(),
-  title: varchar("title", { length: 256 }).notNull(),
+  title: text("title").notNull(),
+  tmdbId: integer("tmdbId"),
   updatedAt: timestamp("updatedAt", {
     mode: "date",
     withTimezone: true,
   }).$onUpdateFn(() => new Date()),
-  writtenBy: text("writtenBy").notNull(),
+  writtenAt: timestamp("writtenAt"),
+  writtenBy: text("writtenBy"),
 });
 
 export type ScriptInsertSchema = typeof Script.$inferInsert;
@@ -61,7 +63,9 @@ export const Character = pgTable("character", {
     .references(() => Script.id, {
       onDelete: "cascade",
     }),
+
   summary: text("summary"),
+  tmdbId: integer("tmdbId"),
   updatedAt: timestamp("updatedAt", {
     mode: "date",
     withTimezone: true,
@@ -77,17 +81,51 @@ export type CharacterQuerySchema = CharacterSelectSchema & {
 export const CharacterRelations = relations(Character, ({ one, many }) => ({
   characterAssignments: many(CharacterAssignment),
   elements: many(Element),
+  scene: many(Scene),
   script: one(Script, {
     fields: [Character.scriptId],
     references: [Script.id],
   }),
 }));
 
+export const Scene = pgTable("scene", {
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  id: varchar("id", { length: 128 })
+    .$defaultFn(() => createId({ prefix: "sn" }))
+    .notNull()
+    .primaryKey(),
+  keywords: text("keywords")
+    .array()
+    .default(sql`ARRAY[]::text[]`),
+  location: text("location"),
+  popularityScore: integer("popularityScore"),
+  scriptId: varchar("scriptId")
+    .notNull()
+    .references(() => Script.id, {
+      onDelete: "cascade",
+    }),
+  sentiment: text("sentiment"),
+  summary: text("summary"),
+  themes: text("themes")
+    .array()
+    .default(sql`ARRAY[]::text[]`),
+  time: text("time"),
+  title: text("title").notNull(),
+  updatedAt: timestamp("updatedAt", {
+    mode: "date",
+    withTimezone: true,
+  }).$onUpdateFn(() => new Date()),
+});
+
+export const SceneRelations = relations(Scene, ({ many }) => ({
+  characters: many(Character),
+  elements: many(Element),
+}));
+
 export const elementTypeEnum = pgEnum("elementType", [
   "action",
   "dialog",
-  "scene",
-  "character",
+  "sceneHeading",
   "transition",
   "parenthetical",
 ]);
@@ -106,16 +144,20 @@ export const Element = pgTable("element", {
     .notNull()
     .primaryKey(),
   index: integer("index").notNull(),
+  isCharacterExtra: boolean("isCharacterExtra").default(false),
+  isElementCutOffOfImage: boolean("isElementCutOffOfImage").default(false),
   metadata: jsonb("metadata"),
   page: integer("page").notNull(),
-  scene: integer("scene").notNull(),
+  sceneId: varchar("sceneId").references(() => Scene.id, {
+    onDelete: "cascade",
+  }),
   scriptId: varchar("scriptId")
     .notNull()
     .references(() => Script.id, {
       onDelete: "cascade",
     }),
   text: text("text").notNull(),
-  type: elementTypeEnum("type").notNull(),
+  type: elementTypeEnum("type").default("action").notNull(),
   updatedAt: timestamp("updatedAt", {
     mode: "date",
     withTimezone: true,
@@ -132,6 +174,10 @@ export const ElementRelations = relations(Element, ({ one }) => ({
   character: one(Character, {
     fields: [Element.characterId],
     references: [Character.id],
+  }),
+  scene: one(Scene, {
+    fields: [Element.sceneId],
+    references: [Scene.id],
   }),
   script: one(Script, {
     fields: [Element.scriptId],
@@ -318,3 +364,17 @@ export const CharacterAssignmentsRelations = relations(
     }),
   }),
 );
+
+export const ShortUrl = pgTable("short_url", {
+  code: text("code").notNull().unique(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  id: varchar("id", { length: 128 })
+    .$defaultFn(() => createId({ prefix: "url" }))
+    .notNull()
+    .primaryKey(),
+  redirectUrl: text("redirectUrl").notNull(),
+  updatedAt: timestamp("updatedAt", {
+    mode: "date",
+    withTimezone: true,
+  }).$onUpdateFn(() => new Date()),
+});

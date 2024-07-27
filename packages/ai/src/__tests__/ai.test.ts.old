@@ -1,0 +1,210 @@
+import { writeFileSync } from "node:fs";
+import path from "node:path";
+import { openai } from "@ai-sdk/openai";
+import { generateObject } from "ai";
+// import pdf from "pdf-parse";
+import { fromPath } from "pdf2pic";
+import { describe, expect, it } from "vitest";
+
+import { elementsPrompt, elementsSchema } from "../prompts/elements-prompt";
+import { scenePrompt, sceneSchema } from "../prompts/scene-prompt";
+
+async function pdfToImages(pdfPath: string) {
+  // const pdfBuffer = readFileSync(pdfPath);
+  const convert = fromPath(pdfPath, {
+    density: 300,
+    format: "png",
+    height: 3507,
+    width: 2481,
+  });
+
+  return await convert.bulk(4, { responseType: "base64" });
+}
+
+describe("ai", () => {
+  it("should convert pdf to images", async () => {
+    // Example usage
+    const pdfPath = path.join(import.meta.dirname, "./file.pdf");
+    console.log(`Converting ${pdfPath} to images...`);
+    console.time("pdfToImageBuffers");
+    // const pdfBuffer = fs.readFileSync(pdfPath);
+    // const data = await pdf(pdfBuffer);
+
+    const images = await pdfToImages(pdfPath);
+    // images[0].
+    console.timeEnd("pdfToImageBuffers");
+
+    // Now you can use imageBuffers to call Vercel AI prompt
+    for (const [index, image] of images.entries()) {
+      // Replace this with your Vercel AI prompt call
+      // console.log(`Page ${index + 1} image buffer size: ${buffer.length} bytes`);
+      if (!image.base64) {
+        console.error(`Failed to convert page ${index + 1} to image`);
+        continue;
+      }
+
+      writeFileSync(
+        path.resolve(import.meta.dirname, `./files/base64-output.${index}.png`),
+        image.base64,
+        "base64",
+      );
+    }
+
+    const image = images[0]?.base64;
+    const characters = [
+      {
+        id: 1,
+        name: "SENATE AIDE",
+      },
+      { id: 2, name: "STRAUSS" },
+      { id: 3, name: "ROBB" },
+      { id: 4, name: "GRAY" },
+      { id: 5, name: "OPPENHEIMER" },
+      { id: 6, name: "EVANS" },
+    ];
+
+    if (image) {
+      const elements = await generateObject({
+        maxTokens: 4096,
+        messages: [
+          {
+            content: elementsPrompt({ characters }),
+            role: "system",
+          },
+          {
+            content: [
+              {
+                image: image,
+                type: "image",
+              },
+            ],
+            role: "user",
+          },
+        ],
+        mode: "json",
+        model: openai("gpt-4o"),
+        schema: elementsSchema,
+        temperature: 1,
+      });
+
+      const expectedObject = {
+        elements: [
+          {
+            characterId: "1",
+            characterName: "SENATE AIDE",
+            extension: "CONT'D",
+            text: "President Eisenhower's asked you to be in his cabinet, the Senate has no choice but to confirm you.",
+            type: "dialog",
+          },
+          {
+            text: "They arrive at the door.",
+            type: "action",
+          },
+          {
+            characterId: "2",
+            characterName: "STRAUSS",
+            text: "And if they bring up Oppenheimer?",
+            type: "dialog",
+          },
+          {
+            characterId: "1",
+            characterName: "SENATE AIDE",
+            text: "When they bring up Oppenheimer, answer honestly and no senator can deny that you did your duty. It'll be uncomfortable...",
+            type: "dialog",
+          },
+          {
+            characterId: "1",
+            text: "(smiles)",
+            type: "parenthetical",
+          },
+          {
+            characterId: "1",
+            characterName: "SENATE AID",
+            text: "Who'd want to justify their whole life?",
+            type: "dialog",
+          },
+          {
+            text: "The door to the VAST committee room opens- they enter, FLASHBULBS POPPING as PRESS and PUBLIC see Strauss.",
+            type: "action",
+          },
+          {
+            characterId: "3",
+            characterName: "ROBB",
+            extension: "V.O.",
+            text: "Why did you leave the United States?",
+            type: "dialog",
+          },
+          {
+            text: "CUT TO:",
+            type: "transition",
+          },
+          {
+            text: "INT. ROOM 2022, ATOMIC ENERGY COMMISSION -- DAY (COLOUR)",
+            type: "scene heading",
+          },
+          {
+            text: "The room is SMALL, SHABBY. Surprised, I look up from my statement at the prosecutor, Roger ROBB. Then turn to the THREE BOARD MEMBERS (GRAY, EVANS, MORGAN).",
+            type: "action",
+          },
+          {
+            characterId: "5",
+            characterName: "OPPENHEIMER",
+            text: "I wanted to learn the *new* physics.",
+            type: "dialog",
+          },
+          {
+            characterId: "4",
+            characterName: "GRAY",
+            text: "Was there nowhere here? I thought Berkeley had the leading theoretical physics department-",
+            type: "dialog",
+          },
+          {
+            characterId: "5",
+            characterName: "OPPENHEIMER",
+            text: "Sure. Once I built it. First I had to go to Europe. I went to Cambridge to work under Patrick Blackett.",
+            type: "dialog",
+          },
+          {
+            characterId: "3",
+            characterName: "ROBB",
+            text: "Were you happier there than in America?",
+            type: "dialog",
+          },
+        ],
+      };
+
+      const scene = await generateObject({
+        maxTokens: 4096,
+        messages: [
+          {
+            content: scenePrompt({ characters }),
+            role: "system",
+          },
+          {
+            content: [
+              {
+                text: JSON.stringify(expectedObject, null, 2),
+                type: "text",
+              },
+            ],
+            role: "user",
+          },
+        ],
+        mode: "json",
+        model: openai("gpt-4o"),
+        schema: sceneSchema,
+        temperature: 1,
+      });
+
+      expect(elements.object).toMatchObject(expectedObject);
+      // const correctness = await ensureCorrectness(object, expectedObject);
+      // console.log("correctness", JSON.stringify(correctness, null, 2));
+      // for await (const partialObject of partialObjectStream) {
+      // console.clear();
+      // console.log(partialObject);
+      // }
+
+      // console.log(result.object);
+    }
+  }, 1_000_000);
+});

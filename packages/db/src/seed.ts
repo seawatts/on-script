@@ -60,31 +60,34 @@ const charactersByName = characters.reduce(
 const elements = [
   {
     characterId: charactersByName.Narrator!.id,
+    sceneId: "scene_1",
     text: "INT. ROOM 2022, ATOMIC ENERGY COMMISSION -- DAY (COLOUR)",
-    type: "scene",
+    type: "action",
   },
   {
     characterId: charactersByName.Narrator!.id,
-
+    sceneId: "scene_1",
     text: "Robb gets right in my face, incredulous-",
     type: "action",
   },
   {
     characterId: charactersByName.ROBB!.id,
     metadata: {},
+    sceneId: "scene_1",
     text: "You mean having worked night and day for three years to build the bomb, you then argued it shouldn’t be used?",
     type: "dialog",
   },
   {
     characterId: charactersByName.OPPENHEIMER!.id,
     metadata: {},
+    sceneId: "scene_1",
     text: "No. I was asked by the Secretary of War what the views of scientists were- I gave the views against and the views for.",
     type: "dialog",
   },
   {
     characterId: charactersByName.ROBB!.id,
-
     metadata: {},
+    sceneId: "scene_1",
     text: "You supported the dropping of the atom bomb on Japan, didn’t you?",
     type: "dialog",
   },
@@ -94,48 +97,51 @@ const elements = [
       continued: true,
       dualDialogue: true,
     },
+    sceneId: "scene_1",
     text: "What do you mean 'support'?",
     type: "dialog",
   },
   {
     characterId: charactersByName.ROBB!.id,
-
     metadata: {
       continued: true,
       dualDialogue: true,
     },
+    sceneId: "scene_1",
     text: "You helped pick the target, didn’t you?",
     type: "dialog",
   },
   {
     characterId: charactersByName.OPPENHEIMER!.id,
     metadata: {},
+    sceneId: "scene_1",
     text: "I did my job- I was not in a policy-making position at Los Alamos- I would have done anything that I was asked to do-",
     type: "dialog",
   },
   {
     characterId: charactersByName.ROBB!.id,
-
     metadata: {},
+    sceneId: "scene_1",
     text: "You would have made the H-bomb too wouldn’t you?",
     type: "dialog",
   },
   {
     characterId: charactersByName.OPPENHEIMER!.id,
     metadata: {},
+    sceneId: "scene_1",
     text: "I couldn’t.",
     type: "dialog",
   },
   {
     characterId: charactersByName.Narrator!.id,
-
+    sceneId: "scene_1",
     text: "The STAMPING breaks rhythm to become CACOPHONOUS...",
     type: "action",
   },
   {
     characterId: charactersByName.ROBB!.id,
-
     metadata: {},
+    sceneId: "scene_1",
     text: "I didn’t ask you that, doctor!",
     type: "dialog",
   },
@@ -145,12 +151,13 @@ const elements = [
       continued: true,
       dualDialogue: true,
     },
+    sceneId: "scene_1",
     text: "I would have worked on it, yes. But to run a laboratory is one thing, to advise a government is another.",
     type: "dialog",
   },
   {
     characterId: charactersByName.Narrator!.id,
-
+    sceneId: "scene_1",
     text: "CUT TO:",
     type: "transition",
   },
@@ -166,7 +173,7 @@ for (const element of elements) {
     ...element,
     index,
     page: index,
-    scene: index,
+    sceneId: "scene_1",
     scriptId: script.id,
   });
 
