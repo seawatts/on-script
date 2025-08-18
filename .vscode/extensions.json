@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "unhook.unhook-vscode",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "yoavbls.pretty-ts-errors",
